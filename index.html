@@ -41,7 +41,6 @@
   .muted{color:var(--cream-dim);}
   a{color:inherit;}
 
-  /* header */
   .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap;}
   .brand{display:flex;align-items:center;gap:12px;}
   .brand-badge{
@@ -56,7 +55,6 @@
   .brand .sub{font-size:12px;color:var(--cream-dim);letter-spacing:0.14em;text-transform:uppercase;font-family:'Inter';font-weight:600;}
   .top-actions{display:flex;gap:8px;flex-wrap:wrap;}
 
-  /* buttons */
   button{font-family:'Inter',sans-serif;cursor:pointer;border:none;border-radius:10px;font-weight:700;letter-spacing:0.01em;transition:transform .12s ease, filter .12s ease;}
   button:active{transform:scale(0.97);}
   .btn{background:var(--surface-hi);color:var(--cream);padding:10px 16px;font-size:13.5px;border:1px solid var(--line);}
@@ -70,7 +68,6 @@
   .btn-sm{padding:6px 11px;font-size:12px;border-radius:8px;}
   .btn-block{width:100%;}
 
-  /* cards / surfaces */
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
   .card-title{font-family:'Teko';font-size:22px;text-transform:uppercase;letter-spacing:0.03em;margin:0 0 12px;color:var(--gold);}
   .field{margin-bottom:14px;}
@@ -83,7 +80,6 @@
   .err{color:var(--red);font-size:13px;margin-top:8px;}
   .ok{color:#8fd99a;font-size:13px;margin-top:8px;}
 
-  /* landing */
   .hero{text-align:center;padding:34px 10px 10px;}
   .hero .disp{font-size:56px;color:var(--cream);}
   .hero .disp em{font-style:normal;color:var(--gold);}
@@ -97,14 +93,12 @@
   .role-card p{margin:0;color:var(--cream-dim);font-size:13px;line-height:1.4;}
   .classifica-link{display:block;text-align:center;margin-top:18px;color:var(--cream-dim);font-size:13px;text-decoration:underline;background:none;border:none;}
 
-  /* player search list */
   .player-list{max-height:280px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;margin-top:4px;}
   .player-item{padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px;display:flex;justify-content:space-between;align-items:center;}
   .player-item:last-child{border-bottom:none;}
   .player-item:hover{background:var(--surface-hi);}
   .player-item .tag{font-size:11px;color:var(--cream-dim);}
 
-  /* lives */
   .lives-row{display:flex;gap:22px;align-items:center;flex-wrap:wrap;}
   .life{display:flex;align-items:center;gap:8px;}
   .life .shield{width:30px;height:32px;border-radius:6px 6px 12px 12px;display:flex;align-items:center;justify-content:center;font-size:15px;border:1.5px solid var(--line);}
@@ -119,7 +113,6 @@
   .status-pill.eliminato{background:rgba(224,90,78,0.18);color:#f4a89e;}
   .status-pill.vincitore{background:rgba(232,184,75,0.22);color:var(--gold);}
 
-  /* giornata strip */
   .gstrip{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;margin-bottom:6px;}
   .gpill{
     flex-shrink:0;width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;
@@ -131,7 +124,6 @@
   .gpill.done-elim{background:rgba(224,90,78,0.18);color:#f4a89e;border-color:var(--red);}
   .gpill.locked{opacity:0.45;}
 
-  /* team pick grid */
   .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:10px;}
   .team-opt{
     border:1.5px solid var(--line);background:var(--surface-hi);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;
@@ -180,31 +172,59 @@
 const DATA = {"teams": ["Atalanta", "Bologna", "Cagliari", "Como", "Fiorentina", "Frosinone", "Genoa", "Inter", "Juventus", "Lazio", "Lecce", "Milan", "Monza", "Napoli", "Parma", "Roma", "Sassuolo", "Torino", "Udinese", "Venezia"], "players": [{"num": 1, "name": "BULLI E PUPE"}, {"num": 2, "name": "VICTORIA SECR"}, {"num": 3, "name": "W H JUVE"}, {"num": 4, "name": "MAGICO ALBERTM"}, {"num": 5, "name": "NO FLY ZONE"}, {"num": 6, "name": "MAE GRUOP"}, {"num": 7, "name": "VACAPUTANGA"}, {"num": 8, "name": "VIRUSSINO"}, {"num": 9, "name": "BEVERLY INPS"}, {"num": 10, "name": "E1"}, {"num": 11, "name": "E2"}, {"num": 12, "name": "E3"}, {"num": 13, "name": "E4"}, {"num": 14, "name": "E5"}, {"num": 15, "name": "AMBROGIO"}, {"num": 16, "name": "CAMILLO"}, {"num": 17, "name": "LAUTARO"}, {"num": 18, "name": "NICCOLO'"}, {"num": 19, "name": "FEDERICO"}, {"num": 20, "name": "ALAN"}, {"num": 21, "name": "EMMA"}, {"num": 22, "name": "RITA"}, {"num": 23, "name": "PINGUINO"}, {"num": 24, "name": "BESOFEN"}, {"num": 25, "name": "Sergio 1"}, {"num": 26, "name": "Sergio 2"}, {"num": 27, "name": "Sergio 3"}, {"num": 28, "name": "Sergio 4"}, {"num": 29, "name": "Sergio 5"}, {"num": 30, "name": "Daniele Orientale"}, {"num": 31, "name": "Sampietro Filippo"}, {"num": 32, "name": "Boldrin Daniel"}, {"num": 33, "name": "JOHNNY"}, {"num": 34, "name": "Simioni Ferdinando"}, {"num": 35, "name": "Giocatore 35"}, {"num": 36, "name": "Giocatore 36"}, {"num": 37, "name": "Giocatore 37"}, {"num": 38, "name": "Giocatore 38"}, {"num": 39, "name": "Giocatore 39"}, {"num": 40, "name": "Giocatore 40"}, {"num": 41, "name": "Giocatore 41"}, {"num": 42, "name": "Giocatore 42"}, {"num": 43, "name": "Giocatore 43"}, {"num": 44, "name": "Giocatore 44"}, {"num": 45, "name": "Giocatore 45"}, {"num": 46, "name": "Giocatore 46"}, {"num": 47, "name": "Giocatore 47"}, {"num": 48, "name": "Giocatore 48"}, {"num": 49, "name": "Giocatore 49"}, {"num": 50, "name": "Giocatore 50"}, {"num": 51, "name": "Giocatore 51"}, {"num": 52, "name": "Giocatore 52"}], "matches": [{"giornata": 1, "data": "23/08/2026", "casa": "Atalanta", "trasferta": "Sassuolo"}, {"giornata": 1, "data": "23/08/2026", "casa": "Bologna", "trasferta": "Lazio"}, {"giornata": 1, "data": "23/08/2026", "casa": "Frosinone", "trasferta": "Juventus"}, {"giornata": 1, "data": "23/08/2026", "casa": "Genoa", "trasferta": "Napoli"}, {"giornata": 1, "data": "23/08/2026", "casa": "Inter", "trasferta": "Monza"}, {"giornata": 1, "data": "23/08/2026", "casa": "Parma", "trasferta": "Cagliari"}, {"giornata": 1, "data": "23/08/2026", "casa": "Roma", "trasferta": "Fiorentina"}, {"giornata": 1, "data": "23/08/2026", "casa": "Torino", "trasferta": "Milan"}, {"giornata": 1, "data": "23/08/2026", "casa": "Udinese", "trasferta": "Como"}, {"giornata": 1, "data": "23/08/2026", "casa": "Venezia", "trasferta": "Lecce"}, {"giornata": 2, "data": "30/08/2026", "casa": "Atalanta", "trasferta": "Bologna"}, {"giornata": 2, "data": "30/08/2026", "casa": "Cagliari", "trasferta": "Inter"}, {"giornata": 2, "data": "30/08/2026", "casa": "Fiorentina", "trasferta": "Frosinone"}, {"giornata": 2, "data": "30/08/2026", "casa": "Juventus", "trasferta": "Parma"}, {"giornata": 2, "data": "30/08/2026", "casa": "Lazio", "trasferta": "Genoa"}, {"giornata": 2, "data": "30/08/2026", "casa": "Lecce", "trasferta": "Roma"}, {"giornata": 2, "data": "30/08/2026", "casa": "Milan", "trasferta": "Venezia"}, {"giornata": 2, "data": "30/08/2026", "casa": "Monza", "trasferta": "Udinese"}, {"giornata": 2, "data": "30/08/2026", "casa": "Napoli", "trasferta": "Como"}, {"giornata": 2, "data": "30/08/2026", "casa": "Sassuolo", "trasferta": "Torino"}, {"giornata": 3, "data": "06/09/2026", "casa": "Bologna", "trasferta": "Sassuolo"}, {"giornata": 3, "data": "06/09/2026", "casa": "Cagliari", "trasferta": "Lecce"}, {"giornata": 3, "data": "06/09/2026", "casa": "Fiorentina", "trasferta": "Torino"}, {"giornata": 3, "data": "06/09/2026", "casa": "Frosinone", "trasferta": "Venezia"}, {"giornata": 3, "data": "06/09/2026", "casa": "Genoa", "trasferta": "Como"}, {"giornata": 3, "data": "06/09/2026", "casa": "Inter", "trasferta": "Napoli"}, {"giornata": 3, "data": "06/09/2026", "casa": "Juventus", "trasferta": "Milan"}, {"giornata": 3, "data": "06/09/2026", "casa": "Parma", "trasferta": "Monza"}, {"giornata": 3, "data": "06/09/2026", "casa": "Roma", "trasferta": "Atalanta"}, {"giornata": 3, "data": "06/09/2026", "casa": "Udinese", "trasferta": "Lazio"}, {"giornata": 4, "data": "13/09/2026", "casa": "Atalanta", "trasferta": "Cagliari"}, {"giornata": 4, "data": "13/09/2026", "casa": "Como", "trasferta": "Parma"}, {"giornata": 4, "data": "13/09/2026", "casa": "Genoa", "trasferta": "Frosinone"}, {"giornata": 4, "data": "13/09/2026", "casa": "Inter", "trasferta": "Udinese"}, {"giornata": 4, "data": "13/09/2026", "casa": "Lazio", "trasferta": "Milan"}, {"giornata": 4, "data": "13/09/2026", "casa": "Lecce", "trasferta": "Monza"}, {"giornata": 4, "data": "13/09/2026", "casa": "Napoli", "trasferta": "Bologna"}, {"giornata": 4, "data": "13/09/2026", "casa": "Sassuolo", "trasferta": "Juventus"}, {"giornata": 4, "data": "13/09/2026", "casa": "Torino", "trasferta": "Roma"}, {"giornata": 4, "data": "13/09/2026", "casa": "Venezia", "trasferta": "Fiorentina"}, {"giornata": 5, "data": "20/09/2026", "casa": "Bologna", "trasferta": "Torino"}, {"giornata": 5, "data": "20/09/2026", "casa": "Fiorentina", "trasferta": "Napoli"}, {"giornata": 5, "data": "20/09/2026", "casa": "Frosinone", "trasferta": "Como"}, {"giornata": 5, "data": "20/09/2026", "casa": "Juventus", "trasferta": "Atalanta"}, {"giornata": 5, "data": "20/09/2026", "casa": "Milan", "trasferta": "Lecce"}, {"giornata": 5, "data": "20/09/2026", "casa": "Monza", "trasferta": "Sassuolo"}, {"giornata": 5, "data": "20/09/2026", "casa": "Parma", "trasferta": "Genoa"}, {"giornata": 5, "data": "20/09/2026", "casa": "Roma", "trasferta": "Inter"}, {"giornata": 5, "data": "20/09/2026", "casa": "Udinese", "trasferta": "Cagliari"}, {"giornata": 5, "data": "20/09/2026", "casa": "Venezia", "trasferta": "Lazio"}, {"giornata": 6, "data": "11/10/2026", "casa": "Atalanta", "trasferta": "Venezia"}, {"giornata": 6, "data": "11/10/2026", "casa": "Cagliari", "trasferta": "Juventus"}, {"giornata": 6, "data": "11/10/2026", "casa": "Como", "trasferta": "Roma"}, {"giornata": 6, "data": "11/10/2026", "casa": "Genoa", "trasferta": "Fiorentina"}, {"giornata": 6, "data": "11/10/2026", "casa": "Inter", "trasferta": "Parma"}, {"giornata": 6, "data": "11/10/2026", "casa": "Lazio", "trasferta": "Monza"}, {"giornata": 6, "data": "11/10/2026", "casa": "Lecce", "trasferta": "Bologna"}, {"giornata": 6, "data": "11/10/2026", "casa": "Napoli", "trasferta": "Frosinone"}, {"giornata": 6, "data": "11/10/2026", "casa": "Sassuolo", "trasferta": "Milan"}, {"giornata": 6, "data": "11/10/2026", "casa": "Torino", "trasferta": "Udinese"}, {"giornata": 7, "data": "18/10/2026", "casa": "Bologna", "trasferta": "Inter"}, {"giornata": 7, "data": "18/10/2026", "casa": "Fiorentina", "trasferta": "Como"}, {"giornata": 7, "data": "18/10/2026", "casa": "Frosinone", "trasferta": "Sassuolo"}, {"giornata": 7, "data": "18/10/2026", "casa": "Juventus", "trasferta": "Lazio"}, {"giornata": 7, "data": "18/10/2026", "casa": "Milan", "trasferta": "Atalanta"}, {"giornata": 7, "data": "18/10/2026", "casa": "Monza", "trasferta": "Cagliari"}, {"giornata": 7, "data": "18/10/2026", "casa": "Parma", "trasferta": "Torino"}, {"giornata": 7, "data": "18/10/2026", "casa": "Roma", "trasferta": "Genoa"}, {"giornata": 7, "data": "18/10/2026", "casa": "Udinese", "trasferta": "Lecce"}, {"giornata": 7, "data": "18/10/2026", "casa": "Venezia", "trasferta": "Napoli"}, {"giornata": 8, "data": "25/10/2026", "casa": "Atalanta", "trasferta": "Frosinone"}, {"giornata": 8, "data": "25/10/2026", "casa": "Cagliari", "trasferta": "Bologna"}, {"giornata": 8, "data": "25/10/2026", "casa": "Como", "trasferta": "Sassuolo"}, {"giornata": 8, "data": "25/10/2026", "casa": "Genoa", "trasferta": "Venezia"}, {"giornata": 8, "data": "25/10/2026", "casa": "Inter", "trasferta": "Fiorentina"}, {"giornata": 8, "data": "25/10/2026", "casa": "Lazio", "trasferta": "Parma"}, {"giornata": 8, "data": "25/10/2026", "casa": "Lecce", "trasferta": "Juventus"}, {"giornata": 8, "data": "25/10/2026", "casa": "Napoli", "trasferta": "Roma"}, {"giornata": 8, "data": "25/10/2026", "casa": "Torino", "trasferta": "Monza"}, {"giornata": 8, "data": "25/10/2026", "casa": "Udinese", "trasferta": "Milan"}, {"giornata": 9, "data": "28/10/2026", "casa": "Fiorentina", "trasferta": "Atalanta"}, {"giornata": 9, "data": "28/10/2026", "casa": "Frosinone", "trasferta": "Lecce"}, {"giornata": 9, "data": "28/10/2026", "casa": "Genoa", "trasferta": "Juventus"}, {"giornata": 9, "data": "28/10/2026", "casa": "Milan", "trasferta": "Bologna"}, {"giornata": 9, "data": "28/10/2026", "casa": "Monza", "trasferta": "Napoli"}, {"giornata": 9, "data": "28/10/2026", "casa": "Parma", "trasferta": "Udinese"}, {"giornata": 9, "data": "28/10/2026", "casa": "Roma", "trasferta": "Cagliari"}, {"giornata": 9, "data": "28/10/2026", "casa": "Sassuolo", "trasferta": "Lazio"}, {"giornata": 9, "data": "28/10/2026", "casa": "Torino", "trasferta": "Como"}, {"giornata": 9, "data": "28/10/2026", "casa": "Venezia", "trasferta": "Inter"}, {"giornata": 10, "data": "01/11/2026", "casa": "Atalanta", "trasferta": "Parma"}, {"giornata": 10, "data": "01/11/2026", "casa": "Bologna", "trasferta": "Monza"}, {"giornata": 10, "data": "01/11/2026", "casa": "Como", "trasferta": "Venezia"}, {"giornata": 10, "data": "01/11/2026", "casa": "Frosinone", "trasferta": "Torino"}, {"giornata": 10, "data": "01/11/2026", "casa": "Juventus", "trasferta": "Napoli"}, {"giornata": 10, "data": "01/11/2026", "casa": "Lazio", "trasferta": "Cagliari"}, {"giornata": 10, "data": "01/11/2026", "casa": "Lecce", "trasferta": "Genoa"}, {"giornata": 10, "data": "01/11/2026", "casa": "Milan", "trasferta": "Inter"}, {"giornata": 10, "data": "01/11/2026", "casa": "Sassuolo", "trasferta": "Fiorentina"}, {"giornata": 10, "data": "01/11/2026", "casa": "Udinese", "trasferta": "Roma"}, {"giornata": 11, "data": "08/11/2026", "casa": "Cagliari", "trasferta": "Frosinone"}, {"giornata": 11, "data": "08/11/2026", "casa": "Fiorentina", "trasferta": "Juventus"}, {"giornata": 11, "data": "08/11/2026", "casa": "Genoa", "trasferta": "Milan"}, {"giornata": 11, "data": "08/11/2026", "casa": "Inter", "trasferta": "Como"}, {"giornata": 11, "data": "08/11/2026", "casa": "Monza", "trasferta": "Atalanta"}, {"giornata": 11, "data": "08/11/2026", "casa": "Napoli", "trasferta": "Lazio"}, {"giornata": 11, "data": "08/11/2026", "casa": "Parma", "trasferta": "Bologna"}, {"giornata": 11, "data": "08/11/2026", "casa": "Roma", "trasferta": "Sassuolo"}, {"giornata": 11, "data": "08/11/2026", "casa": "Torino", "trasferta": "Lecce"}, {"giornata": 11, "data": "08/11/2026", "casa": "Venezia", "trasferta": "Udinese"}, {"giornata": 12, "data": "22/11/2026", "casa": "Atalanta", "trasferta": "Inter"}, {"giornata": 12, "data": "22/11/2026", "casa": "Bologna", "trasferta": "Udinese"}, {"giornata": 12, "data": "22/11/2026", "casa": "Como", "trasferta": "Cagliari"}, {"giornata": 12, "data": "22/11/2026", "casa": "Juventus", "trasferta": "Venezia"}, {"giornata": 12, "data": "22/11/2026", "casa": "Lazio", "trasferta": "Lecce"}, {"giornata": 12, "data": "22/11/2026", "casa": "Milan", "trasferta": "Frosinone"}, {"giornata": 12, "data": "22/11/2026", "casa": "Monza", "trasferta": "Fiorentina"}, {"giornata": 12, "data": "22/11/2026", "casa": "Napoli", "trasferta": "Torino"}, {"giornata": 12, "data": "22/11/2026", "casa": "Parma", "trasferta": "Roma"}, {"giornata": 12, "data": "22/11/2026", "casa": "Sassuolo", "trasferta": "Genoa"}, {"giornata": 13, "data": "29/11/2026", "casa": "Cagliari", "trasferta": "Milan"}, {"giornata": 13, "data": "29/11/2026", "casa": "Como", "trasferta": "Juventus"}, {"giornata": 13, "data": "29/11/2026", "casa": "Frosinone", "trasferta": "Parma"}, {"giornata": 13, "data": "29/11/2026", "casa": "Inter", "trasferta": "Genoa"}, {"giornata": 13, "data": "29/11/2026", "casa": "Lecce", "trasferta": "Atalanta"}, {"giornata": 13, "data": "29/11/2026", "casa": "Roma", "trasferta": "Monza"}, {"giornata": 13, "data": "29/11/2026", "casa": "Sassuolo", "trasferta": "Napoli"}, {"giornata": 13, "data": "29/11/2026", "casa": "Torino", "trasferta": "Lazio"}, {"giornata": 13, "data": "29/11/2026", "casa": "Udinese", "trasferta": "Fiorentina"}, {"giornata": 13, "data": "29/11/2026", "casa": "Venezia", "trasferta": "Bologna"}, {"giornata": 14, "data": "06/12/2026", "casa": "Bologna", "trasferta": "Roma"}, {"giornata": 14, "data": "06/12/2026", "casa": "Fiorentina", "trasferta": "Cagliari"}, {"giornata": 14, "data": "06/12/2026", "casa": "Frosinone", "trasferta": "Inter"}, {"giornata": 14, "data": "06/12/2026", "casa": "Genoa", "trasferta": "Torino"}, {"giornata": 14, "data": "06/12/2026", "casa": "Juventus", "trasferta": "Udinese"}, {"giornata": 14, "data": "06/12/2026", "casa": "Lazio", "trasferta": "Atalanta"}, {"giornata": 14, "data": "06/12/2026", "casa": "Milan", "trasferta": "Parma"}, {"giornata": 14, "data": "06/12/2026", "casa": "Monza", "trasferta": "Como"}, {"giornata": 14, "data": "06/12/2026", "casa": "Napoli", "trasferta": "Lecce"}, {"giornata": 14, "data": "06/12/2026", "casa": "Venezia", "trasferta": "Sassuolo"}, {"giornata": 15, "data": "13/12/2026", "casa": "Atalanta", "trasferta": "Genoa"}, {"giornata": 15, "data": "13/12/2026", "casa": "Cagliari", "trasferta": "Venezia"}, {"giornata": 15, "data": "13/12/2026", "casa": "Como", "trasferta": "Bologna"}, {"giornata": 15, "data": "13/12/2026", "casa": "Inter", "trasferta": "Torino"}, {"giornata": 15, "data": "13/12/2026", "casa": "Juventus", "trasferta": "Monza"}, {"giornata": 15, "data": "13/12/2026", "casa": "Lazio", "trasferta": "Roma"}, {"giornata": 15, "data": "13/12/2026", "casa": "Lecce", "trasferta": "Sassuolo"}, {"giornata": 15, "data": "13/12/2026", "casa": "Napoli", "trasferta": "Milan"}, {"giornata": 15, "data": "13/12/2026", "casa": "Parma", "trasferta": "Fiorentina"}, {"giornata": 15, "data": "13/12/2026", "casa": "Udinese", "trasferta": "Frosinone"}, {"giornata": 16, "data": "20/12/2026", "casa": "Atalanta", "trasferta": "Napoli"}, {"giornata": 16, "data": "20/12/2026", "casa": "Fiorentina", "trasferta": "Bologna"}, {"giornata": 16, "data": "20/12/2026", "casa": "Frosinone", "trasferta": "Lazio"}, {"giornata": 16, "data": "20/12/2026", "casa": "Genoa", "trasferta": "Udinese"}, {"giornata": 16, "data": "20/12/2026", "casa": "Lecce", "trasferta": "Inter"}, {"giornata": 16, "data": "20/12/2026", "casa": "Milan", "trasferta": "Como"}, {"giornata": 16, "data": "20/12/2026", "casa": "Roma", "trasferta": "Juventus"}, {"giornata": 16, "data": "20/12/2026", "casa": "Sassuolo", "trasferta": "Parma"}, {"giornata": 16, "data": "20/12/2026", "casa": "Torino", "trasferta": "Cagliari"}, {"giornata": 16, "data": "20/12/2026", "casa": "Venezia", "trasferta": "Monza"}, {"giornata": 17, "data": "03/01/2027", "casa": "Bologna", "trasferta": "Juventus"}, {"giornata": 17, "data": "03/01/2027", "casa": "Cagliari", "trasferta": "Genoa"}, {"giornata": 17, "data": "03/01/2027", "casa": "Como", "trasferta": "Lecce"}, {"giornata": 17, "data": "03/01/2027", "casa": "Fiorentina", "trasferta": "Lazio"}, {"giornata": 17, "data": "03/01/2027", "casa": "Inter", "trasferta": "Sassuolo"}, {"giornata": 17, "data": "03/01/2027", "casa": "Monza", "trasferta": "Milan"}, {"giornata": 17, "data": "03/01/2027", "casa": "Parma", "trasferta": "Napoli"}, {"giornata": 17, "data": "03/01/2027", "casa": "Roma", "trasferta": "Frosinone"}, {"giornata": 17, "data": "03/01/2027", "casa": "Torino", "trasferta": "Venezia"}, {"giornata": 17, "data": "03/01/2027", "casa": "Udinese", "trasferta": "Atalanta"}, {"giornata": 18, "data": "06/01/2027", "casa": "Atalanta", "trasferta": "Como"}, {"giornata": 18, "data": "06/01/2027", "casa": "Frosinone", "trasferta": "Bologna"}, {"giornata": 18, "data": "06/01/2027", "casa": "Genoa", "trasferta": "Monza"}, {"giornata": 18, "data": "06/01/2027", "casa": "Juventus", "trasferta": "Torino"}, {"giornata": 18, "data": "06/01/2027", "casa": "Lazio", "trasferta": "Inter"}, {"giornata": 18, "data": "06/01/2027", "casa": "Lecce", "trasferta": "Parma"}, {"giornata": 18, "data": "06/01/2027", "casa": "Milan", "trasferta": "Fiorentina"}, {"giornata": 18, "data": "06/01/2027", "casa": "Napoli", "trasferta": "Cagliari"}, {"giornata": 18, "data": "06/01/2027", "casa": "Sassuolo", "trasferta": "Udinese"}, {"giornata": 18, "data": "06/01/2027", "casa": "Venezia", "trasferta": "Roma"}, {"giornata": 19, "data": "10/01/2027", "casa": "Bologna", "trasferta": "Genoa"}, {"giornata": 19, "data": "10/01/2027", "casa": "Cagliari", "trasferta": "Sassuolo"}, {"giornata": 19, "data": "10/01/2027", "casa": "Como", "trasferta": "Lazio"}, {"giornata": 19, "data": "10/01/2027", "casa": "Fiorentina", "trasferta": "Lecce"}, {"giornata": 19, "data": "10/01/2027", "casa": "Inter", "trasferta": "Juventus"}, {"giornata": 19, "data": "10/01/2027", "casa": "Monza", "trasferta": "Frosinone"}, {"giornata": 19, "data": "10/01/2027", "casa": "Parma", "trasferta": "Venezia"}, {"giornata": 19, "data": "10/01/2027", "casa": "Roma", "trasferta": "Milan"}, {"giornata": 19, "data": "10/01/2027", "casa": "Torino", "trasferta": "Atalanta"}, {"giornata": 19, "data": "10/01/2027", "casa": "Udinese", "trasferta": "Napoli"}, {"giornata": 20, "data": "17/01/2027", "casa": "Atalanta", "trasferta": "Roma"}, {"giornata": 20, "data": "17/01/2027", "casa": "Cagliari", "trasferta": "Como"}, {"giornata": 20, "data": "17/01/2027", "casa": "Juventus", "trasferta": "Genoa"}, {"giornata": 20, "data": "17/01/2027", "casa": "Lazio", "trasferta": "Bologna"}, {"giornata": 20, "data": "17/01/2027", "casa": "Lecce", "trasferta": "Udinese"}, {"giornata": 20, "data": "17/01/2027", "casa": "Milan", "trasferta": "Torino"}, {"giornata": 20, "data": "17/01/2027", "casa": "Napoli", "trasferta": "Fiorentina"}, {"giornata": 20, "data": "17/01/2027", "casa": "Parma", "trasferta": "Inter"}, {"giornata": 20, "data": "17/01/2027", "casa": "Sassuolo", "trasferta": "Monza"}, {"giornata": 20, "data": "17/01/2027", "casa": "Venezia", "trasferta": "Frosinone"}, {"giornata": 21, "data": "24/01/2027", "casa": "Bologna", "trasferta": "Atalanta"}, {"giornata": 21, "data": "24/01/2027", "casa": "Como", "trasferta": "Napoli"}, {"giornata": 21, "data": "24/01/2027", "casa": "Fiorentina", "trasferta": "Sassuolo"}, {"giornata": 21, "data": "24/01/2027", "casa": "Frosinone", "trasferta": "Milan"}, {"giornata": 21, "data": "24/01/2027", "casa": "Genoa", "trasferta": "Parma"}, {"giornata": 21, "data": "24/01/2027", "casa": "Inter", "trasferta": "Venezia"}, {"giornata": 21, "data": "24/01/2027", "casa": "Juventus", "trasferta": "Cagliari"}, {"giornata": 21, "data": "24/01/2027", "casa": "Lecce", "trasferta": "Torino"}, {"giornata": 21, "data": "24/01/2027", "casa": "Monza", "trasferta": "Lazio"}, {"giornata": 21, "data": "24/01/2027", "casa": "Roma", "trasferta": "Udinese"}, {"giornata": 22, "data": "31/01/2027", "casa": "Atalanta", "trasferta": "Fiorentina"}, {"giornata": 22, "data": "31/01/2027", "casa": "Cagliari", "trasferta": "Parma"}, {"giornata": 22, "data": "31/01/2027", "casa": "Genoa", "trasferta": "Lecce"}, {"giornata": 22, "data": "31/01/2027", "casa": "Lazio", "trasferta": "Venezia"}, {"giornata": 22, "data": "31/01/2027", "casa": "Milan", "trasferta": "Juventus"}, {"giornata": 22, "data": "31/01/2027", "casa": "Monza", "trasferta": "Roma"}, {"giornata": 22, "data": "31/01/2027", "casa": "Napoli", "trasferta": "Inter"}, {"giornata": 22, "data": "31/01/2027", "casa": "Sassuolo", "trasferta": "Como"}, {"giornata": 22, "data": "31/01/2027", "casa": "Torino", "trasferta": "Frosinone"}, {"giornata": 22, "data": "31/01/2027", "casa": "Udinese", "trasferta": "Bologna"}, {"giornata": 23, "data": "07/02/2027", "casa": "Atalanta", "trasferta": "Lazio"}, {"giornata": 23, "data": "07/02/2027", "casa": "Bologna", "trasferta": "Milan"}, {"giornata": 23, "data": "07/02/2027", "casa": "Como", "trasferta": "Monza"}, {"giornata": 23, "data": "07/02/2027", "casa": "Fiorentina", "trasferta": "Udinese"}, {"giornata": 23, "data": "07/02/2027", "casa": "Inter", "trasferta": "Cagliari"}, {"giornata": 23, "data": "07/02/2027", "casa": "Juventus", "trasferta": "Sassuolo"}, {"giornata": 23, "data": "07/02/2027", "casa": "Lecce", "trasferta": "Napoli"}, {"giornata": 23, "data": "07/02/2027", "casa": "Parma", "trasferta": "Frosinone"}, {"giornata": 23, "data": "07/02/2027", "casa": "Roma", "trasferta": "Torino"}, {"giornata": 23, "data": "07/02/2027", "casa": "Venezia", "trasferta": "Genoa"}, {"giornata": 24, "data": "14/02/2027", "casa": "Bologna", "trasferta": "Como"}, {"giornata": 24, "data": "14/02/2027", "casa": "Cagliari", "trasferta": "Lazio"}, {"giornata": 24, "data": "14/02/2027", "casa": "Frosinone", "trasferta": "Fiorentina"}, {"giornata": 24, "data": "14/02/2027", "casa": "Genoa", "trasferta": "Atalanta"}, {"giornata": 24, "data": "14/02/2027", "casa": "Inter", "trasferta": "Milan"}, {"giornata": 24, "data": "14/02/2027", "casa": "Monza", "trasferta": "Lecce"}, {"giornata": 24, "data": "14/02/2027", "casa": "Napoli", "trasferta": "Juventus"}, {"giornata": 24, "data": "14/02/2027", "casa": "Roma", "trasferta": "Parma"}, {"giornata": 24, "data": "14/02/2027", "casa": "Torino", "trasferta": "Sassuolo"}, {"giornata": 24, "data": "14/02/2027", "casa": "Udinese", "trasferta": "Venezia"}, {"giornata": 25, "data": "21/02/2027", "casa": "Atalanta", "trasferta": "Monza"}, {"giornata": 25, "data": "21/02/2027", "casa": "Como", "trasferta": "Torino"}, {"giornata": 25, "data": "21/02/2027", "casa": "Fiorentina", "trasferta": "Inter"}, {"giornata": 25, "data": "21/02/2027", "casa": "Juventus", "trasferta": "Bologna"}, {"giornata": 25, "data": "21/02/2027", "casa": "Lazio", "trasferta": "Napoli"}, {"giornata": 25, "data": "21/02/2027", "casa": "Lecce", "trasferta": "Frosinone"}, {"giornata": 25, "data": "21/02/2027", "casa": "Milan", "trasferta": "Genoa"}, {"giornata": 25, "data": "21/02/2027", "casa": "Sassuolo", "trasferta": "Roma"}, {"giornata": 25, "data": "21/02/2027", "casa": "Udinese", "trasferta": "Parma"}, {"giornata": 25, "data": "21/02/2027", "casa": "Venezia", "trasferta": "Cagliari"}, {"giornata": 26, "data": "28/02/2027", "casa": "Bologna", "trasferta": "Lecce"}, {"giornata": 26, "data": "28/02/2027", "casa": "Cagliari", "trasferta": "Udinese"}, {"giornata": 26, "data": "28/02/2027", "casa": "Como", "trasferta": "Milan"}, {"giornata": 26, "data": "28/02/2027", "casa": "Frosinone", "trasferta": "Napoli"}, {"giornata": 26, "data": "28/02/2027", "casa": "Genoa", "trasferta": "Lazio"}, {"giornata": 26, "data": "28/02/2027", "casa": "Inter", "trasferta": "Atalanta"}, {"giornata": 26, "data": "28/02/2027", "casa": "Monza", "trasferta": "Juventus"}, {"giornata": 26, "data": "28/02/2027", "casa": "Parma", "trasferta": "Sassuolo"}, {"giornata": 26, "data": "28/02/2027", "casa": "Roma", "trasferta": "Venezia"}, {"giornata": 26, "data": "28/02/2027", "casa": "Torino", "trasferta": "Fiorentina"}, {"giornata": 27, "data": "07/03/2027", "casa": "Atalanta", "trasferta": "Torino"}, {"giornata": 27, "data": "07/03/2027", "casa": "Fiorentina", "trasferta": "Venezia"}, {"giornata": 27, "data": "07/03/2027", "casa": "Juventus", "trasferta": "Roma"}, {"giornata": 27, "data": "07/03/2027", "casa": "Lazio", "trasferta": "Frosinone"}, {"giornata": 27, "data": "07/03/2027", "casa": "Lecce", "trasferta": "Como"}, {"giornata": 27, "data": "07/03/2027", "casa": "Milan", "trasferta": "Cagliari"}, {"giornata": 27, "data": "07/03/2027", "casa": "Monza", "trasferta": "Genoa"}, {"giornata": 27, "data": "07/03/2027", "casa": "Napoli", "trasferta": "Parma"}, {"giornata": 27, "data": "07/03/2027", "casa": "Sassuolo", "trasferta": "Bologna"}, {"giornata": 27, "data": "07/03/2027", "casa": "Udinese", "trasferta": "Inter"}, {"giornata": 28, "data": "14/03/2027", "casa": "Bologna", "trasferta": "Napoli"}, {"giornata": 28, "data": "14/03/2027", "casa": "Cagliari", "trasferta": "Fiorentina"}, {"giornata": 28, "data": "14/03/2027", "casa": "Como", "trasferta": "Udinese"}, {"giornata": 28, "data": "14/03/2027", "casa": "Frosinone", "trasferta": "Monza"}, {"giornata": 28, "data": "14/03/2027", "casa": "Genoa", "trasferta": "Roma"}, {"giornata": 28, "data": "14/03/2027", "casa": "Lazio", "trasferta": "Juventus"}, {"giornata": 28, "data": "14/03/2027", "casa": "Milan", "trasferta": "Sassuolo"}, {"giornata": 28, "data": "14/03/2027", "casa": "Parma", "trasferta": "Lecce"}, {"giornata": 28, "data": "14/03/2027", "casa": "Torino", "trasferta": "Inter"}, {"giornata": 28, "data": "14/03/2027", "casa": "Venezia", "trasferta": "Atalanta"}, {"giornata": 29, "data": "21/03/2027", "casa": "Atalanta", "trasferta": "Milan"}, {"giornata": 29, "data": "21/03/2027", "casa": "Fiorentina", "trasferta": "Genoa"}, {"giornata": 29, "data": "21/03/2027", "casa": "Inter", "trasferta": "Frosinone"}, {"giornata": 29, "data": "21/03/2027", "casa": "Juventus", "trasferta": "Como"}, {"giornata": 29, "data": "21/03/2027", "casa": "Monza", "trasferta": "Bologna"}, {"giornata": 29, "data": "21/03/2027", "casa": "Napoli", "trasferta": "Venezia"}, {"giornata": 29, "data": "21/03/2027", "casa": "Parma", "trasferta": "Lazio"}, {"giornata": 29, "data": "21/03/2027", "casa": "Roma", "trasferta": "Lecce"}, {"giornata": 29, "data": "21/03/2027", "casa": "Sassuolo", "trasferta": "Cagliari"}, {"giornata": 29, "data": "21/03/2027", "casa": "Udinese", "trasferta": "Torino"}, {"giornata": 30, "data": "04/04/2027", "casa": "Cagliari", "trasferta": "Napoli"}, {"giornata": 30, "data": "04/04/2027", "casa": "Como", "trasferta": "Fiorentina"}, {"giornata": 30, "data": "04/04/2027", "casa": "Frosinone", "trasferta": "Udinese"}, {"giornata": 30, "data": "04/04/2027", "casa": "Genoa", "trasferta": "Inter"}, {"giornata": 30, "data": "04/04/2027", "casa": "Lecce", "trasferta": "Lazio"}, {"giornata": 30, "data": "04/04/2027", "casa": "Milan", "trasferta": "Monza"}, {"giornata": 30, "data": "04/04/2027", "casa": "Roma", "trasferta": "Bologna"}, {"giornata": 30, "data": "04/04/2027", "casa": "Sassuolo", "trasferta": "Atalanta"}, {"giornata": 30, "data": "04/04/2027", "casa": "Torino", "trasferta": "Juventus"}, {"giornata": 30, "data": "04/04/2027", "casa": "Venezia", "trasferta": "Parma"}, {"giornata": 31, "data": "11/04/2027", "casa": "Bologna", "trasferta": "Venezia"}, {"giornata": 31, "data": "11/04/2027", "casa": "Cagliari", "trasferta": "Atalanta"}, {"giornata": 31, "data": "11/04/2027", "casa": "Fiorentina", "trasferta": "Milan"}, {"giornata": 31, "data": "11/04/2027", "casa": "Frosinone", "trasferta": "Genoa"}, {"giornata": 31, "data": "11/04/2027", "casa": "Inter", "trasferta": "Roma"}, {"giornata": 31, "data": "11/04/2027", "casa": "Juventus", "trasferta": "Lecce"}, {"giornata": 31, "data": "11/04/2027", "casa": "Lazio", "trasferta": "Torino"}, {"giornata": 31, "data": "11/04/2027", "casa": "Napoli", "trasferta": "Sassuolo"}, {"giornata": 31, "data": "11/04/2027", "casa": "Parma", "trasferta": "Como"}, {"giornata": 31, "data": "11/04/2027", "casa": "Udinese", "trasferta": "Monza"}, {"giornata": 32, "data": "18/04/2027", "casa": "Atalanta", "trasferta": "Udinese"}, {"giornata": 32, "data": "18/04/2027", "casa": "Bologna", "trasferta": "Cagliari"}, {"giornata": 32, "data": "18/04/2027", "casa": "Como", "trasferta": "Frosinone"}, {"giornata": 32, "data": "18/04/2027", "casa": "Fiorentina", "trasferta": "Parma"}, {"giornata": 32, "data": "18/04/2027", "casa": "Milan", "trasferta": "Napoli"}, {"giornata": 32, "data": "18/04/2027", "casa": "Monza", "trasferta": "Inter"}, {"giornata": 32, "data": "18/04/2027", "casa": "Roma", "trasferta": "Lazio"}, {"giornata": 32, "data": "18/04/2027", "casa": "Sassuolo", "trasferta": "Lecce"}, {"giornata": 32, "data": "18/04/2027", "casa": "Torino", "trasferta": "Genoa"}, {"giornata": 32, "data": "18/04/2027", "casa": "Venezia", "trasferta": "Juventus"}, {"giornata": 33, "data": "25/04/2027", "casa": "Cagliari", "trasferta": "Monza"}, {"giornata": 33, "data": "25/04/2027", "casa": "Frosinone", "trasferta": "Roma"}, {"giornata": 33, "data": "25/04/2027", "casa": "Genoa", "trasferta": "Sassuolo"}, {"giornata": 33, "data": "25/04/2027", "casa": "Inter", "trasferta": "Bologna"}, {"giornata": 33, "data": "25/04/2027", "casa": "Juventus", "trasferta": "Fiorentina"}, {"giornata": 33, "data": "25/04/2027", "casa": "Lazio", "trasferta": "Como"}, {"giornata": 33, "data": "25/04/2027", "casa": "Lecce", "trasferta": "Milan"}, {"giornata": 33, "data": "25/04/2027", "casa": "Napoli", "trasferta": "Udinese"}, {"giornata": 33, "data": "25/04/2027", "casa": "Parma", "trasferta": "Atalanta"}, {"giornata": 33, "data": "25/04/2027", "casa": "Venezia", "trasferta": "Torino"}, {"giornata": 34, "data": "02/05/2027", "casa": "Atalanta", "trasferta": "Juventus"}, {"giornata": 34, "data": "02/05/2027", "casa": "Bologna", "trasferta": "Fiorentina"}, {"giornata": 34, "data": "02/05/2027", "casa": "Como", "trasferta": "Inter"}, {"giornata": 34, "data": "02/05/2027", "casa": "Lecce", "trasferta": "Cagliari"}, {"giornata": 34, "data": "02/05/2027", "casa": "Milan", "trasferta": "Lazio"}, {"giornata": 34, "data": "02/05/2027", "casa": "Monza", "trasferta": "Venezia"}, {"giornata": 34, "data": "02/05/2027", "casa": "Roma", "trasferta": "Napoli"}, {"giornata": 34, "data": "02/05/2027", "casa": "Sassuolo", "trasferta": "Frosinone"}, {"giornata": 34, "data": "02/05/2027", "casa": "Torino", "trasferta": "Parma"}, {"giornata": 34, "data": "02/05/2027", "casa": "Udinese", "trasferta": "Genoa"}, {"giornata": 35, "data": "09/05/2027", "casa": "Fiorentina", "trasferta": "Roma"}, {"giornata": 35, "data": "09/05/2027", "casa": "Frosinone", "trasferta": "Atalanta"}, {"giornata": 35, "data": "09/05/2027", "casa": "Genoa", "trasferta": "Cagliari"}, {"giornata": 35, "data": "09/05/2027", "casa": "Inter", "trasferta": "Lecce"}, {"giornata": 35, "data": "09/05/2027", "casa": "Lazio", "trasferta": "Sassuolo"}, {"giornata": 35, "data": "09/05/2027", "casa": "Napoli", "trasferta": "Monza"}, {"giornata": 35, "data": "09/05/2027", "casa": "Parma", "trasferta": "Milan"}, {"giornata": 35, "data": "09/05/2027", "casa": "Torino", "trasferta": "Bologna"}, {"giornata": 35, "data": "09/05/2027", "casa": "Udinese", "trasferta": "Juventus"}, {"giornata": 35, "data": "09/05/2027", "casa": "Venezia", "trasferta": "Como"}, {"giornata": 36, "data": "16/05/2027", "casa": "Bologna", "trasferta": "Frosinone"}, {"giornata": 36, "data": "16/05/2027", "casa": "Cagliari", "trasferta": "Torino"}, {"giornata": 36, "data": "16/05/2027", "casa": "Como", "trasferta": "Atalanta"}, {"giornata": 36, "data": "16/05/2027", "casa": "Juventus", "trasferta": "Inter"}, {"giornata": 36, "data": "16/05/2027", "casa": "Lazio", "trasferta": "Udinese"}, {"giornata": 36, "data": "16/05/2027", "casa": "Lecce", "trasferta": "Fiorentina"}, {"giornata": 36, "data": "16/05/2027", "casa": "Milan", "trasferta": "Roma"}, {"giornata": 36, "data": "16/05/2027", "casa": "Monza", "trasferta": "Parma"}, {"giornata": 36, "data": "16/05/2027", "casa": "Napoli", "trasferta": "Genoa"}, {"giornata": 36, "data": "16/05/2027", "casa": "Sassuolo", "trasferta": "Venezia"}, {"giornata": 37, "data": "23/05/2027", "casa": "Atalanta", "trasferta": "Lecce"}, {"giornata": 37, "data": "23/05/2027", "casa": "Fiorentina", "trasferta": "Monza"}, {"giornata": 37, "data": "23/05/2027", "casa": "Frosinone", "trasferta": "Cagliari"}, {"giornata": 37, "data": "23/05/2027", "casa": "Genoa", "trasferta": "Bologna"}, {"giornata": 37, "data": "23/05/2027", "casa": "Inter", "trasferta": "Lazio"}, {"giornata": 37, "data": "23/05/2027", "casa": "Parma", "trasferta": "Juventus"}, {"giornata": 37, "data": "23/05/2027", "casa": "Roma", "trasferta": "Como"}, {"giornata": 37, "data": "23/05/2027", "casa": "Torino", "trasferta": "Napoli"}, {"giornata": 37, "data": "23/05/2027", "casa": "Udinese", "trasferta": "Sassuolo"}, {"giornata": 37, "data": "23/05/2027", "casa": "Venezia", "trasferta": "Milan"}, {"giornata": 38, "data": "30/05/2027", "casa": "Bologna", "trasferta": "Parma"}, {"giornata": 38, "data": "30/05/2027", "casa": "Cagliari", "trasferta": "Roma"}, {"giornata": 38, "data": "30/05/2027", "casa": "Como", "trasferta": "Genoa"}, {"giornata": 38, "data": "30/05/2027", "casa": "Juventus", "trasferta": "Frosinone"}, {"giornata": 38, "data": "30/05/2027", "casa": "Lazio", "trasferta": "Fiorentina"}, {"giornata": 38, "data": "30/05/2027", "casa": "Lecce", "trasferta": "Venezia"}, {"giornata": 38, "data": "30/05/2027", "casa": "Milan", "trasferta": "Udinese"}, {"giornata": 38, "data": "30/05/2027", "casa": "Monza", "trasferta": "Torino"}, {"giornata": 38, "data": "30/05/2027", "casa": "Napoli", "trasferta": "Atalanta"}, {"giornata": 38, "data": "30/05/2027", "casa": "Sassuolo", "trasferta": "Inter"}]};
 
 /* ============================================================
-   STORAGE HELPERS
+   CONFIGURAZIONE SUPABASE (database condiviso)
    ============================================================ */
-async function storeGet(key, shared){
-  try{ const r = await window.storage.get(key, shared); return r ? r.value : null; }
-  catch(e){ return null; }
+const SUPABASE_URL = "https://lcizpelkdarudmrvhyag.supabase.co";
+const SUPABASE_KEY = "sb_publishable_s4CFObBIgZ5tpkBXDlIctg_F5jzkRIw";
+
+async function sb(path, options){
+  options = options || {};
+  const headers = Object.assign({
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'Content-Type': 'application/json'
+  }, options.headers || {});
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, Object.assign({}, options, {headers}));
+  if(!res.ok){
+    let txt = '';
+    try{ txt = await res.text(); }catch(e){}
+    throw new Error('Errore database (' + res.status + '): ' + txt);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
-async function storeSet(key, value, shared){
-  try{ const r = await window.storage.set(key, value, shared); return !!r; }
-  catch(e){ return false; }
-}
+
+async function fetchGiocatori(){ return sb('giocatori?select=*&order=id.asc'); }
+async function bulkInsertGiocatori(list){ return sb('giocatori', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}, body: JSON.stringify(list)}); }
+async function updateGiocatore(id, patch){ return sb('giocatori?id=eq.' + id, {method:'PATCH', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(patch)}); }
+async function insertGiocatore(rec){ return sb('giocatori', {method:'POST', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(rec)}); }
+async function deleteGiocatore(id){ return sb('giocatori?id=eq.' + id, {method:'DELETE', headers:{'Prefer':'return=minimal'}}); }
+
+async function fetchRisultati(){ return sb('risultati?select=*'); }
+async function upsertRisultati(rows){ return sb('risultati', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}, body: JSON.stringify(rows)}); }
+
+async function fetchPronosticiFor(playerId){ return sb('pronostici?player_id=eq.' + playerId + '&select=giornata,squadra'); }
+async function fetchAllPronostici(){ return sb('pronostici?select=player_id,giornata,squadra'); }
+async function upsertPronostico(playerId, giornata, squadra){ return sb('pronostici', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}, body: JSON.stringify([{player_id:playerId, giornata:giornata, squadra:squadra}])}); }
+
+async function fetchConfig(key){ const r = await sb('config?key=eq.' + key + '&select=value'); return (r && r[0]) ? r[0].value : null; }
+async function setConfig(key, value){ return sb('config', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}, body: JSON.stringify([{key:key, value:value}])}); }
 
 /* ============================================================
    STATO APP (in memoria, nessun localStorage per policy artifact)
    ============================================================ */
 const State = {
-  screen: 'landing',       // landing | player-login | player-dash | admin-login | admin-dash
-  giocatori: null,         // [{id, nome, pin}]
-  risultati: null,         // { "<matchGlobalIndex>": "h-a" }
-  currentPlayer: null,     // {id, nome}
+  screen: 'landing',
+  giocatori: null,
+  risultati: null,
+  currentPlayer: null,
   adminPw: null,
   isAdmin: false,
   activeGiornata: 1,
   adminTab: 'risultati',
   adminGiornata: 1,
   loading: true,
+  loadError: null,
 };
 
 const DEFAULT_ADMIN_PW = 'sopravvissuto2027';
@@ -212,41 +232,49 @@ const DEFAULT_ADMIN_PW = 'sopravvissuto2027';
 function globalIndex(m){ return DATA.matches.indexOf(m); }
 
 async function bootstrap(){
-  let g = await storeGet('giocatori', true);
-  if(!g){
-    const initial = DATA.players.map(p => ({id:p.num, nome:p.name, pin:null}));
-    await storeSet('giocatori', JSON.stringify(initial), true);
-    g = JSON.stringify(initial);
+  State.loading = true; State.loadError = null; render();
+  try{
+    let rows = await fetchGiocatori();
+    if(!rows || rows.length===0){
+      const initial = DATA.players.map(p => ({id:p.num, nome:p.name, pin:null}));
+      await bulkInsertGiocatori(initial);
+      rows = initial;
+    }
+    State.giocatori = rows;
+
+    const risRows = await fetchRisultati();
+    State.risultati = {};
+    (risRows||[]).forEach(r=>{ State.risultati[r.match_idx] = r.risultato; });
+
+    let pw = await fetchConfig('admin_pw');
+    if(!pw){ pw = DEFAULT_ADMIN_PW; await setConfig('admin_pw', pw); }
+    State.adminPw = pw;
+
+    State.loading = false;
+  } catch(e){
+    State.loadError = e.message || String(e);
+    State.loading = false;
   }
-  State.giocatori = JSON.parse(g);
-
-  let r = await storeGet('risultati', true);
-  State.risultati = r ? JSON.parse(r) : {};
-
-  let pw = await storeGet('admin_pw', true);
-  if(!pw){
-    await storeSet('admin_pw', DEFAULT_ADMIN_PW, true);
-    pw = DEFAULT_ADMIN_PW;
-  }
-  State.adminPw = pw;
-
-  State.loading = false;
   render();
 }
 
 async function refreshShared(){
-  const g = await storeGet('giocatori', true);
-  if(g) State.giocatori = JSON.parse(g);
-  const r = await storeGet('risultati', true);
-  State.risultati = r ? JSON.parse(r) : {};
+  try{
+    const rows = await fetchGiocatori();
+    if(rows) State.giocatori = rows;
+    const risRows = await fetchRisultati();
+    State.risultati = {};
+    (risRows||[]).forEach(r=>{ State.risultati[r.match_idx] = r.risultato; });
+  }catch(e){ /* mantieni ultimo stato noto */ }
 }
 
 async function getPronostici(playerId){
-  const p = await storeGet('pron_'+playerId, true);
-  return p ? JSON.parse(p) : {};
-}
-async function setPronostici(playerId, obj){
-  return storeSet('pron_'+playerId, JSON.stringify(obj), true);
+  try{
+    const rows = await fetchPronosticiFor(playerId);
+    const obj = {};
+    (rows||[]).forEach(r=>{ obj[r.giornata] = r.squadra; });
+    return obj;
+  }catch(e){ return {}; }
 }
 
 /* ============================================================
@@ -259,7 +287,6 @@ function giornateList(){
 const ALL_GIORNATE = giornateList();
 
 function parseDate(dstr){
-  // formato DD/MM/YYYY
   const [d,m,y] = dstr.split('/').map(Number);
   return new Date(y, m-1, d);
 }
@@ -332,7 +359,6 @@ function nextActionableGiornata(pronostici, state){
   for(const g of ALL_GIORNATE){
     if(!pronostici[g] && !isGiornataLocked(g)) return g;
   }
-  // altrimenti torna l'ultima giornata aperta o disputata
   for(let i=ALL_GIORNATE.length-1;i>=0;i--){
     if(pronostici[ALL_GIORNATE[i]]) return ALL_GIORNATE[i];
   }
@@ -356,11 +382,16 @@ function fmtDate(dstr){
 function render(){
   const app = document.getElementById('app');
   if(State.loading){ app.innerHTML = '<div class="empty"><span class="spinner"></span> Caricamento torneo...</div>'; return; }
+  if(State.loadError){
+    app.innerHTML = renderTopbar() + `<div class="card"><div class="card-title">Errore di connessione al database</div><p class="muted small">${esc(State.loadError)}</p><button class="btn-primary btn" id="btn-retry">Riprova</button></div>`;
+    const btn = document.getElementById('btn-retry'); if(btn) btn.addEventListener('click', bootstrap);
+    return;
+  }
   let html = renderTopbar();
   if(State.screen==='landing') html += renderLanding();
   else if(State.screen==='player-login') html += renderPlayerLogin();
   else if(State.screen==='player-dash') html += renderPlayerDash();
-  else if(State.screen==='classifica') html += renderClassifica();
+  else if(State.screen==='classifica') html += renderClassificaLoading();
   else if(State.screen==='admin-login') html += renderAdminLogin();
   else if(State.screen==='admin-dash') html += renderAdminDash();
   html += renderFootnote();
@@ -396,7 +427,7 @@ function renderTopbar(){
 }
 
 function renderFootnote(){
-  return `<div class="foot-note">Ogni giornata si blocca automaticamente al fischio d'inizio. I risultati vengono inseriti dall'amministratore e tutto si aggiorna da solo.</div>`;
+  return `<div class="foot-note">Ogni giornata si blocca automaticamente al fischio d'inizio. I risultati vengono inseriti dall'amministratore e tutto si aggiorna da solo per tutti i partecipanti.</div>`;
 }
 
 function renderLanding(){
@@ -577,9 +608,8 @@ function renderLockedPick(g, h, team){
   `;
 }
 
-function renderClassifica(){
-  const rows = State.giocatori.map(p=>({p, pron: State._allPron ? (State._allPron[p.id]||{}) : {}}));
-  return `<div class="card"><div class="card-title">Caricamento classifica…</div></div>`;
+function renderClassificaLoading(){
+  return `<div class="card"><div class="empty"><span class="spinner"></span> Caricamento classifica...</div></div>`;
 }
 
 function buildClassificaRows(){
@@ -738,14 +768,18 @@ function attachHandlers(){
   on('btn-logout', 'click', ()=>{ State.currentPlayer=null; State._pron=null; State.screen='landing'; render(); });
   on('btn-logout-admin', 'click', ()=>{ State.isAdmin=false; State.screen='landing'; render(); });
 
-  on('card-player', 'click', ()=>{ State.screen='player-login'; State._selectedForLogin=null; State._playerFilter=''; render(); });
+  on('card-player', 'click', async ()=>{
+    State.screen='player-login'; State._selectedForLogin=null; State._playerFilter=''; render();
+    await refreshShared(); render();
+  });
   on('card-admin', 'click', ()=>{ State.screen='admin-login'; State._loginError=null; render(); });
 
   on('player-search', 'input', (e)=>{ State._playerFilter = e.target.value; render(); setTimeout(()=>{ const el=document.getElementById('player-search'); if(el){ el.focus(); el.selectionStart=el.selectionEnd=el.value.length; } },0); });
 
   app.querySelectorAll('.player-item[data-id]').forEach(el=>{
-    el.addEventListener('click', ()=>{
+    el.addEventListener('click', async ()=>{
       const id = parseInt(el.getAttribute('data-id'));
+      await refreshShared();
       State._selectedForLogin = State.giocatori.find(p=>p.id===id);
       State._loginError = null;
       render();
@@ -770,12 +804,10 @@ function attachHandlers(){
   });
   on('admin-pw-input','keydown',(e)=>{ if(e.key==='Enter') document.getElementById('btn-admin-login')?.click(); });
 
-  // giornata strip
   app.querySelectorAll('.gpill[data-g]').forEach(el=>{
     el.addEventListener('click', ()=>{ State.activeGiornata = parseInt(el.getAttribute('data-g')); State._pendingPick=null; render(); });
   });
 
-  // team pick
   app.querySelectorAll('.team-opt[data-team]').forEach(el=>{
     el.addEventListener('click', ()=>{
       State._pendingPick = el.getAttribute('data-team');
@@ -784,11 +816,13 @@ function attachHandlers(){
   });
   on('btn-save-pick', 'click', async ()=>{ await savePick(); });
 
-  // admin: risultati
   on('admin-g-select', 'change', (e)=>{ State.adminGiornata = parseInt(e.target.value); render(); });
   on('btn-save-risultati', 'click', async ()=>{ await saveRisultati(); });
 
-  // admin: giocatori
+  app.querySelectorAll('.tab[data-tab]').forEach(el=>{
+    el.addEventListener('click', ()=>{ State.adminTab = el.getAttribute('data-tab'); render(); });
+  });
+
   on('btn-add-player', 'click', async ()=>{ await addPlayer(); });
   app.querySelectorAll('[data-remove]').forEach(el=>{
     el.addEventListener('click', async ()=>{ await removePlayer(parseInt(el.getAttribute('data-remove'))); });
@@ -797,7 +831,6 @@ function attachHandlers(){
     el.addEventListener('click', async ()=>{ await resetPin(parseInt(el.getAttribute('data-reset-pin'))); });
   });
 
-  // admin: settings
   on('btn-change-pw', 'click', async ()=>{ await changeAdminPw(); });
   on('btn-export', 'click', async ()=>{ await exportBackup(); });
 }
@@ -811,8 +844,12 @@ async function doPlayerLogin(){
   const fresh = State.giocatori.find(p=>p.id===sel.id);
   if(!fresh){ State._loginError='Giocatore non trovato.'; render(); return; }
   if(!fresh.pin){
-    fresh.pin = pin;
-    await storeSet('giocatori', JSON.stringify(State.giocatori), true);
+    try{
+      await updateGiocatore(fresh.id, {pin: pin});
+      fresh.pin = pin;
+    }catch(e){
+      State._loginError = 'Errore di connessione, riprova.'; render(); return;
+    }
   } else if(fresh.pin !== pin){
     State._loginError='PIN errato.'; render(); return;
   }
@@ -828,10 +865,13 @@ async function savePick(){
   if(!State._pendingPick) return;
   const g = State.activeGiornata;
   if(isGiornataLocked(g)){ State._pendingPick=null; render(); return; }
-  const pron = State._pron || {};
-  pron[g] = State._pendingPick;
-  await setPronostici(State.currentPlayer.id, pron);
-  State._pron = pron;
+  const squadra = State._pendingPick;
+  try{
+    await upsertPronostico(State.currentPlayer.id, g, squadra);
+    State._pron[g] = squadra;
+  }catch(e){
+    alert('Errore nel salvataggio: ' + (e.message||e));
+  }
   State._pendingPick = null;
   render();
 }
@@ -839,11 +879,15 @@ async function savePick(){
 async function openClassifica(){
   State.screen='classifica';
   render();
-  await refreshShared();
-  State._allPron = {};
-  for(const p of State.giocatori){
-    State._allPron[p.id] = await getPronostici(p.id);
-  }
+  try{
+    await refreshShared();
+    const rows = await fetchAllPronostici();
+    State._allPron = {};
+    (rows||[]).forEach(r=>{
+      if(!State._allPron[r.player_id]) State._allPron[r.player_id]={};
+      State._allPron[r.player_id][r.giornata] = r.squadra;
+    });
+  }catch(e){ /* mostra comunque quello che c'è */ }
   const app = document.getElementById('app');
   app.innerHTML = renderTopbar() + renderClassificaTable() + renderFootnote();
   attachHandlers();
@@ -851,19 +895,22 @@ async function openClassifica(){
 
 async function saveRisultati(){
   const app = document.getElementById('app');
-  const hs = app.querySelectorAll('.res-h'); const as = app.querySelectorAll('.res-a');
-  const updates = {};
+  const hs = app.querySelectorAll('.res-h');
+  const rows = [];
   hs.forEach(el=>{
     const idx = el.getAttribute('data-idx');
-    const aEl = app.querySelector(`.res-a[data-idx="${idx}"]`);
+    const aEl = app.querySelector('.res-a[data-idx="'+idx+'"]');
     const hv = el.value.trim(); const av = aEl.value.trim();
-    if(hv!=='' && av!==''){ updates[idx] = hv+'-'+av; }
+    if(hv!=='' && av!==''){ rows.push({match_idx: parseInt(idx), risultato: hv+'-'+av}); }
   });
-  await refreshShared();
-  Object.assign(State.risultati, updates);
-  await storeSet('risultati', JSON.stringify(State.risultati), true);
-  const fb = document.getElementById('admin-res-feedback');
-  if(fb) fb.textContent = 'Risultati salvati ✓';
+  try{
+    if(rows.length) await upsertRisultati(rows);
+    await refreshShared();
+    const fb = document.getElementById('admin-res-feedback');
+    if(fb) fb.textContent = 'Risultati salvati ✓';
+  }catch(e){
+    alert('Errore nel salvataggio: ' + (e.message||e));
+  }
   render();
 }
 
@@ -873,42 +920,59 @@ async function addPlayer(){
   if(!name) return;
   await refreshShared();
   const nextId = State.giocatori.length ? Math.max(...State.giocatori.map(p=>p.id))+1 : 1;
-  State.giocatori.push({id: nextId, nome: name, pin: null});
-  await storeSet('giocatori', JSON.stringify(State.giocatori), true);
+  try{
+    await insertGiocatore({id: nextId, nome: name, pin: null});
+    await refreshShared();
+  }catch(e){
+    alert('Errore: ' + (e.message||e));
+  }
   render();
 }
 async function removePlayer(id){
   if(!confirm('Rimuovere questo giocatore? I suoi pronostici resteranno salvati ma non sarà più in classifica.')) return;
-  await refreshShared();
-  State.giocatori = State.giocatori.filter(p=>p.id!==id);
-  await storeSet('giocatori', JSON.stringify(State.giocatori), true);
+  try{
+    await deleteGiocatore(id);
+    await refreshShared();
+  }catch(e){
+    alert('Errore: ' + (e.message||e));
+  }
   render();
 }
 async function resetPin(id){
-  await refreshShared();
-  const p = State.giocatori.find(x=>x.id===id);
-  if(p){ p.pin = null; await storeSet('giocatori', JSON.stringify(State.giocatori), true); }
+  try{
+    await updateGiocatore(id, {pin: null});
+    await refreshShared();
+  }catch(e){}
   render();
 }
 async function changeAdminPw(){
   const val = document.getElementById('new-admin-pw').value.trim();
   if(val.length<4) return;
-  await storeSet('admin_pw', val, true);
-  State.adminPw = val;
-  State._pwFeedback = 'Password aggiornata.';
+  try{
+    await setConfig('admin_pw', val);
+    State.adminPw = val;
+    State._pwFeedback = 'Password aggiornata.';
+  }catch(e){
+    alert('Errore: ' + (e.message||e));
+  }
   render();
 }
 async function exportBackup(){
-  await refreshShared();
-  const allPron = {};
-  for(const p of State.giocatori){ allPron[p.id] = await getPronostici(p.id); }
-  const backup = { giocatori: State.giocatori, risultati: State.risultati, pronostici: allPron, esportato: new Date().toISOString() };
-  const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'ultimo-sopravvissuto-backup.json';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  try{
+    await refreshShared();
+    const rows = await fetchAllPronostici();
+    const allPron = {};
+    (rows||[]).forEach(r=>{ if(!allPron[r.player_id]) allPron[r.player_id]={}; allPron[r.player_id][r.giornata]=r.squadra; });
+    const backup = { giocatori: State.giocatori, risultati: State.risultati, pronostici: allPron, esportato: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'ultimo-sopravvissuto-backup.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){
+    alert('Errore export: ' + (e.message||e));
+  }
 }
 
 bootstrap();
