@@ -77,6 +77,9 @@
     padding:10px 12px;font-size:14.5px;font-family:'Inter';
   }
   input:focus,select:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  input[type=number]{ -moz-appearance:textfield; }
   .err{color:var(--red);font-size:13px;margin-top:8px;}
   .ok{color:#8fd99a;font-size:13px;margin-top:8px;}
 
@@ -582,9 +585,10 @@ function renderPlayerDash(){
 
 function renderPickForm(g, alreadyPicked, usedTeamsElsewhere){
   const teams = teamsInGiornata(g);
+  const currentSelection = State._pendingPick || alreadyPicked;
   const opts = teams.map(t=>{
     const usedElsewhere = usedTeamsElsewhere.has(t.team);
-    const isSel = alreadyPicked === t.team;
+    const isSel = currentSelection === t.team;
     const cls = ['team-opt']; if(isSel) cls.push('selected'); if(usedElsewhere) cls.push('disabled');
     return `<div class="${cls.join(' ')}" ${usedElsewhere?'':`data-team="${esc(t.team)}"`}>
       ${esc(t.team)}<span class="vs">${t.casa?'in casa vs':'in trasferta @'} ${esc(t.opp)}</span>
@@ -671,15 +675,72 @@ function renderAdminLogin(){
 }
 
 function renderAdminDash(){
-  const tabs = ['risultati','giocatori','classifica','impostazioni'];
-  const labels = {risultati:'Risultati', giocatori:'Giocatori', classifica:'Classifica', impostazioni:'Impostazioni'};
+  const tabs = ['risultati','forza','giocatori','classifica','impostazioni'];
+  const labels = {risultati:'Risultati', forza:'Forza pronostico', giocatori:'Giocatori', classifica:'Classifica', impostazioni:'Impostazioni'};
   let tabsHtml = tabs.map(t=>`<div class="tab ${State.adminTab===t?'active':''}" data-tab="${t}">${labels[t]}</div>`).join('');
   let content = '';
   if(State.adminTab==='risultati') content = renderAdminRisultati();
+  else if(State.adminTab==='forza') content = renderAdminForza();
   else if(State.adminTab==='giocatori') content = renderAdminGiocatori();
   else if(State.adminTab==='classifica') content = renderClassificaTable();
   else if(State.adminTab==='impostazioni') content = renderAdminSettings();
   return `<div class="tabs">${tabsHtml}</div>${content}`;
+}
+
+function renderAdminForza(){
+  const players = [...State.giocatori].sort((a,b)=>a.nome.localeCompare(b.nome));
+  const playerOpts = `<option value="">— scegli giocatore —</option>` + players.map(p=>`<option value="${p.id}" ${State._forzaPlayerId===p.id?'selected':''}>${esc(p.nome)}</option>`).join('');
+
+  let body = `
+  <div class="card">
+    <div class="card-title">Forza pronostico</div>
+    <div class="notice">Usa questa sezione se un giocatore ti comunica il pronostico in ritardo: qui puoi inserirlo o correggerlo per lui, anche se la giornata è già bloccata per tutti gli altri.</div>
+    <div class="field">
+      <label>Giocatore</label>
+      <select id="forza-player-select">${playerOpts}</select>
+    </div>`;
+
+  if(State._forzaPlayerId){
+    const g = State._forzaGiornata || 1;
+    const gOpts = ALL_GIORNATE.map(gg=>`<option value="${gg}" ${gg===g?'selected':''}>Giornata ${gg} — ${fmtDate(matchesForGiornata(gg)[0].data)}</option>`).join('');
+    const pron = State._forzaPron || {};
+    const currentPick = pron[g];
+    const usedElsewhereSet = new Set(ALL_GIORNATE.filter(x=>x!==g).map(x=>pron[x]).filter(Boolean));
+    const teams = teamsInGiornata(g);
+    const pending = State._forzaPending;
+    const selection = pending || currentPick;
+
+    body += `
+    <div class="field">
+      <label>Giornata</label>
+      <select id="forza-g-select">${gOpts}</select>
+    </div>
+    <div class="team-grid">
+      ${teams.map(t=>{
+        const usedElsewhere = usedElsewhereSet.has(t.team);
+        const isSel = selection === t.team;
+        const cls = ['team-opt']; if(isSel) cls.push('selected'); if(usedElsewhere) cls.push('disabled');
+        return `<div class="${cls.join(' ')}" data-forza-team="${esc(t.team)}">
+          ${esc(t.team)}<span class="vs">${t.casa?'in casa vs':'in trasferta @'} ${esc(t.opp)}</span>
+          ${usedElsewhere?'<span class="vs">già usata altrove — verrà comunque forzata</span>':''}
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="row-between" style="margin-top:16px;">
+      <div class="small muted" id="forza-feedback"></div>
+      <button class="btn-primary btn" id="btn-save-forza" ${!pending?'disabled':''}>Salva pronostico forzato</button>
+    </div>`;
+
+    const historyRows = ALL_GIORNATE.filter(gg=>pron[gg]).map(gg=>`<tr><td class="mono">${gg}</td><td>${esc(pron[gg])}</td></tr>`).join('');
+    body += `
+    <div style="margin-top:18px;">
+      <div class="card-title" style="font-size:18px;">Pronostici già registrati per questo giocatore</div>
+      ${historyRows ? `<table><thead><tr><th>Giornata</th><th>Squadra</th></tr></thead><tbody>${historyRows}</tbody></table>` : '<div class="muted small">Nessun pronostico ancora registrato.</div>'}
+    </div>`;
+  }
+
+  body += `</div>`;
+  return body;
 }
 
 function renderAdminRisultati(){
@@ -701,9 +762,9 @@ function renderAdminRisultati(){
         const [h,a] = res ? res.split('-') : ['',''];
         return `<tr>
           <td>${esc(m.casa)}</td>
-          <td style="width:60px;"><input type="number" min="0" max="20" class="mono res-h" data-idx="${idx}" value="${h}" style="text-align:center;"></td>
+          <td style="width:70px;"><input type="number" min="0" max="20" class="mono res-h" data-idx="${idx}" value="${h}" style="text-align:center;font-size:16px;"></td>
           <td>${esc(m.trasferta)}</td>
-          <td style="width:60px;"><input type="number" min="0" max="20" class="mono res-a" data-idx="${idx}" value="${a}" style="text-align:center;"></td>
+          <td style="width:70px;"><input type="number" min="0" max="20" class="mono res-a" data-idx="${idx}" value="${a}" style="text-align:center;font-size:16px;"></td>
         </tr>`;
       }).join('')}
       </tbody>
@@ -819,6 +880,20 @@ function attachHandlers(){
   on('admin-g-select', 'change', (e)=>{ State.adminGiornata = parseInt(e.target.value); render(); });
   on('btn-save-risultati', 'click', async ()=>{ await saveRisultati(); });
 
+  on('forza-player-select', 'change', async (e)=>{
+    const id = parseInt(e.target.value) || null;
+    State._forzaPlayerId = id;
+    State._forzaGiornata = 1;
+    State._forzaPending = null;
+    if(id){ State._forzaPron = await getPronostici(id); } else { State._forzaPron = null; }
+    render();
+  });
+  on('forza-g-select', 'change', (e)=>{ State._forzaGiornata = parseInt(e.target.value); State._forzaPending = null; render(); });
+  app.querySelectorAll('.team-opt[data-forza-team]').forEach(el=>{
+    el.addEventListener('click', ()=>{ State._forzaPending = el.getAttribute('data-forza-team'); render(); });
+  });
+  on('btn-save-forza', 'click', async ()=>{ await saveForzaPick(); });
+
   app.querySelectorAll('.tab[data-tab]').forEach(el=>{
     el.addEventListener('click', ()=>{ State.adminTab = el.getAttribute('data-tab'); render(); });
   });
@@ -908,6 +983,22 @@ async function saveRisultati(){
     await refreshShared();
     const fb = document.getElementById('admin-res-feedback');
     if(fb) fb.textContent = 'Risultati salvati ✓';
+  }catch(e){
+    alert('Errore nel salvataggio: ' + (e.message||e));
+  }
+  render();
+}
+
+async function saveForzaPick(){
+  if(!State._forzaPlayerId || !State._forzaPending) return;
+  const playerId = State._forzaPlayerId;
+  const g = State._forzaGiornata;
+  const squadra = State._forzaPending;
+  try{
+    await upsertPronostico(playerId, g, squadra);
+    State._forzaPron = State._forzaPron || {};
+    State._forzaPron[g] = squadra;
+    State._forzaPending = null;
   }catch(e){
     alert('Errore nel salvataggio: ' + (e.message||e));
   }
