@@ -228,6 +228,7 @@ const State = {
   adminGiornata: 1,
   loading: true,
   loadError: null,
+  torneoStart: 1,
 };
 
 const DEFAULT_ADMIN_PW = 'sopravvissuto2027';
@@ -253,6 +254,9 @@ async function bootstrap(){
     if(!pw){ pw = DEFAULT_ADMIN_PW; await setConfig('admin_pw', pw); }
     State.adminPw = pw;
 
+    let start = await fetchConfig('torneo_start');
+    State.torneoStart = start ? parseInt(start) : 1;
+
     State.loading = false;
   } catch(e){
     State.loadError = e.message || String(e);
@@ -268,6 +272,8 @@ async function refreshShared(){
     const risRows = await fetchRisultati();
     State.risultati = {};
     (risRows||[]).forEach(r=>{ State.risultati[r.match_idx] = r.risultato; });
+    const start = await fetchConfig('torneo_start');
+    if(start) State.torneoStart = parseInt(start);
   }catch(e){ /* mantieni ultimo stato noto */ }
 }
 
@@ -331,10 +337,15 @@ function computeEsito(match, pick){
   return a > h ? 'Vinta' : 'Persa';
 }
 
+function currentGiornateRange(){
+  return ALL_GIORNATE.filter(g=>g>=State.torneoStart);
+}
+
 function computePlayerState(pronostici){
   let lifeS=false, lifeP=false, eliminated=false, eliminatedGiornata=null;
   const history=[];
-  for(const g of ALL_GIORNATE){
+  const range = currentGiornateRange();
+  for(const g of range){
     const pick = pronostici[g];
     if(!pick) continue;
     const match = matchesForGiornata(g).find(m=>m.casa===pick||m.trasferta===pick);
@@ -352,20 +363,21 @@ function computePlayerState(pronostici){
     }
     history.push({giornata:g, squadra:pick, avversario: match.casa===pick?match.trasferta:match.casa, casa: match.casa===pick, esito, vitaEvent, locked: isGiornataLocked(g)});
   }
-  const squadreUsate = ALL_GIORNATE.map(g=>pronostici[g]).filter(Boolean);
+  const squadreUsate = range.map(g=>pronostici[g]).filter(Boolean);
   const giornateGiocate = history.filter(h=>h.esito).length;
   return {lifeS, lifeP, eliminated, eliminatedGiornata, history, squadreUsate, giornateGiocate};
 }
 
 function nextActionableGiornata(pronostici, state){
+  const range = currentGiornateRange();
   if(state.eliminated) return null;
-  for(const g of ALL_GIORNATE){
+  for(const g of range){
     if(!pronostici[g] && !isGiornataLocked(g)) return g;
   }
-  for(let i=ALL_GIORNATE.length-1;i>=0;i--){
-    if(pronostici[ALL_GIORNATE[i]]) return ALL_GIORNATE[i];
+  for(let i=range.length-1;i>=0;i--){
+    if(pronostici[range[i]]) return range[i];
   }
-  return ALL_GIORNATE[0];
+  return range[0];
 }
 
 /* ============================================================
@@ -524,9 +536,9 @@ function renderPlayerDash(){
   const g = State.activeGiornata;
   const locked = isGiornataLocked(g);
   const alreadyPicked = pron[g];
-  const usedTeamsElsewhere = new Set(ALL_GIORNATE.filter(x=>x!==g).map(x=>pron[x]).filter(Boolean));
+  const usedTeamsElsewhere = new Set(currentGiornateRange().filter(x=>x!==g).map(x=>pron[x]).filter(Boolean));
 
-  let stripHtml = ALL_GIORNATE.map(gg=>{
+  let stripHtml = currentGiornateRange().map(gg=>{
     const h = histByG[gg];
     const cls = ['gpill'];
     if(gg===g) cls.push('active');
@@ -551,7 +563,7 @@ function renderPlayerDash(){
     <div class="row-between">
       <div>
         <div class="card-title" style="margin-bottom:2px;">${esc(player.nome)}</div>
-        <div class="muted small">${st.giornateGiocate} giornate giocate · ${st.squadreUsate.length} squadre bruciate</div>
+        <div class="muted small">${st.giornateGiocate} giornate giocate · ${st.squadreUsate.length} squadre bruciate${State.torneoStart>1?` · torneo dalla giornata ${State.torneoStart}`:''}</div>
       </div>
     </div>
     <div style="margin-top:12px;">${renderLifeShields(st)}</div>
@@ -642,7 +654,10 @@ function renderClassificaTable(){
   }
   return `
   <div class="card">
-    <div class="card-title">Classifica</div>
+    <div class="row-between">
+      <div class="card-title" style="margin:0;">Classifica</div>
+      ${State.torneoStart>1?`<span class="small muted">Torneo attuale: dalla giornata ${State.torneoStart}</span>`:''}
+    </div>
     ${banner}
     <table>
       <thead><tr><th>#</th><th>Giocatore</th><th>Stato</th><th>Vita S.</th><th>Vita P.</th><th>Giornate</th></tr></thead>
@@ -801,12 +816,24 @@ function renderAdminGiocatori(){
 }
 
 function renderAdminSettings(){
+  const opts = ALL_GIORNATE.map(gg=>`<option value="${gg}" ${gg===State.torneoStart?'selected':''}>Giornata ${gg}</option>`).join('');
   return `
   <div class="card">
     <div class="card-title">Cambia password amministratore</div>
     <div class="field"><input type="password" id="new-admin-pw" placeholder="Nuova password"></div>
     <button class="btn-primary btn" id="btn-change-pw">Aggiorna password</button>
     ${State._pwFeedback?`<div class="ok">${esc(State._pwFeedback)}</div>`:''}
+  </div>
+  <div class="card">
+    <div class="card-title">Nuovo torneo</div>
+    <p class="muted small">Se il torneo attuale finisce (es. tutti eliminati alla giornata 12) e vuoi farne ripartire uno nuovo dalla giornata successiva, imposta qui da quale giornata ricominciare: vite ed eliminazioni si azzerano automaticamente per tutti, mentre lo storico delle giornate precedenti resta salvato nel database.</p>
+    <p class="small" style="color:var(--gold);">Torneo attuale: parte dalla giornata <b>${State.torneoStart}</b>.</p>
+    <div class="field">
+      <label>Ricomincia dalla giornata</label>
+      <select id="torneo-start-select">${opts}</select>
+    </div>
+    <button class="btn-primary btn" id="btn-nuovo-torneo">Avvia nuovo torneo da questa giornata</button>
+    ${State._torneoFeedback?`<div class="ok">${esc(State._torneoFeedback)}</div>`:''}
   </div>
   <div class="card">
     <div class="card-title">Esporta backup</div>
@@ -907,6 +934,7 @@ function attachHandlers(){
   });
 
   on('btn-change-pw', 'click', async ()=>{ await changeAdminPw(); });
+  on('btn-nuovo-torneo', 'click', async ()=>{ await avviaNuovoTorneo(); });
   on('btn-export', 'click', async ()=>{ await exportBackup(); });
 }
 
@@ -1043,6 +1071,18 @@ async function changeAdminPw(){
     await setConfig('admin_pw', val);
     State.adminPw = val;
     State._pwFeedback = 'Password aggiornata.';
+  }catch(e){
+    alert('Errore: ' + (e.message||e));
+  }
+  render();
+}
+async function avviaNuovoTorneo(){
+  const val = parseInt(document.getElementById('torneo-start-select').value);
+  if(!confirm('Sei sicuro? Da questo momento tutti i giocatori ripartiranno con 2 vite fresche dalla giornata ' + val + '. Le giornate precedenti restano salvate ma non conteranno più ai fini di vite ed eliminazioni.')) return;
+  try{
+    await setConfig('torneo_start', String(val));
+    State.torneoStart = val;
+    State._torneoFeedback = 'Nuovo torneo avviato dalla giornata ' + val + '.';
   }catch(e){
     alert('Errore: ' + (e.message||e));
   }
