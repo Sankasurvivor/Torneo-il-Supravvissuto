@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Ultimo Sopravvissuto — Serie A 2026/2027</title>
+<title>Ultimo Sopravvissuto — By Sanka</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -212,6 +212,16 @@ async function upsertPronostico(playerId, giornata, squadra){ return sb('pronost
 
 async function fetchConfig(key){ const r = await sb('config?key=eq.' + key + '&select=value'); return (r && r[0]) ? r[0].value : null; }
 async function setConfig(key, value){ return sb('config', {method:'POST', headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}, body: JSON.stringify([{key:key, value:value}])}); }
+async function deleteConfig(key){ return sb('config?key=eq.' + key, {method:'DELETE', headers:{'Prefer':'return=minimal'}}); }
+async function fetchLockConfigs(){
+  const r = await sb('config?key=like.lock_g*&select=key,value');
+  const obj = {};
+  (r||[]).forEach(row=>{
+    const m = row.key.match(/^lock_g(\d+)$/);
+    if(m) obj[parseInt(m[1])] = row.value;
+  });
+  return obj;
+}
 
 /* ============================================================
    STATO APP (in memoria, nessun localStorage per policy artifact)
@@ -219,6 +229,7 @@ async function setConfig(key, value){ return sb('config', {method:'POST', header
 const State = {
   screen: 'landing',
   giocatori: null,
+  matches: null,
   risultati: null,
   currentPlayer: null,
   adminPw: null,
@@ -229,11 +240,19 @@ const State = {
   loading: true,
   loadError: null,
   torneoStart: 1,
+  chiusure: {},
 };
 
 const DEFAULT_ADMIN_PW = 'sopravvissuto2027';
 
-function globalIndex(m){ return DATA.matches.indexOf(m); }
+async function fetchCalendario(){ return sb('calendario?select=giornata,data,casa,trasferta&order=giornata.asc,id.asc'); }
+async function bulkInsertCalendario(rows){ return sb('calendario', {method:'POST', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(rows)}); }
+async function clearCalendario(){ return sb('calendario?giornata=gte.0', {method:'DELETE', headers:{'Prefer':'return=minimal'}}); }
+async function clearRisultati(){ return sb('risultati?match_idx=gte.0', {method:'DELETE', headers:{'Prefer':'return=minimal'}}); }
+async function clearPronosticiAll(){ return sb('pronostici?giornata=gte.0', {method:'DELETE', headers:{'Prefer':'return=minimal'}}); }
+async function clearChiusureAll(){ return sb('config?key=like.lock_g*', {method:'DELETE', headers:{'Prefer':'return=minimal'}}); }
+
+function globalIndex(m){ return State.matches.indexOf(m); }
 
 async function bootstrap(){
   State.loading = true; State.loadError = null; render();
@@ -246,6 +265,14 @@ async function bootstrap(){
     }
     State.giocatori = rows;
 
+    let cal = await fetchCalendario();
+    if(!cal || cal.length===0){
+      await bulkInsertCalendario(DATA.matches.map(m=>({giornata:m.giornata, data:m.data, casa:m.casa, trasferta:m.trasferta})));
+      cal = DATA.matches;
+    }
+    State.matches = cal;
+    ALL_GIORNATE = Array.from(new Set(State.matches.map(m=>m.giornata))).sort((a,b)=>a-b);
+
     const risRows = await fetchRisultati();
     State.risultati = {};
     (risRows||[]).forEach(r=>{ State.risultati[r.match_idx] = r.risultato; });
@@ -256,6 +283,8 @@ async function bootstrap(){
 
     let start = await fetchConfig('torneo_start');
     State.torneoStart = start ? parseInt(start) : 1;
+
+    State.chiusure = await fetchLockConfigs();
 
     State.loading = false;
   } catch(e){
@@ -274,6 +303,7 @@ async function refreshShared(){
     (risRows||[]).forEach(r=>{ State.risultati[r.match_idx] = r.risultato; });
     const start = await fetchConfig('torneo_start');
     if(start) State.torneoStart = parseInt(start);
+    State.chiusure = await fetchLockConfigs();
   }catch(e){ /* mantieni ultimo stato noto */ }
 }
 
@@ -289,34 +319,35 @@ async function getPronostici(playerId){
 /* ============================================================
    LOGICA DI GIOCO
    ============================================================ */
-function giornateList(){
-  const s = new Set(DATA.matches.map(m=>m.giornata));
-  return Array.from(s).sort((a,b)=>a-b);
-}
-const ALL_GIORNATE = giornateList();
+let ALL_GIORNATE = [];
 
 function parseDate(dstr){
   const [d,m,y] = dstr.split('/').map(Number);
   return new Date(y, m-1, d);
 }
 function giornataDate(g){
-  const m = DATA.matches.find(x=>x.giornata===g);
+  const m = State.matches.find(x=>x.giornata===g);
   return m ? parseDate(m.data) : null;
 }
 function giornataHasKickedOff(g){
+  const custom = State.chiusure[g];
+  if(custom){
+    const d = new Date(custom);
+    if(!isNaN(d)) return new Date() >= d;
+  }
   const d = giornataDate(g);
   if(!d) return false;
   const today = new Date(); today.setHours(0,0,0,0);
   return today >= d;
 }
 function giornataHasAnyResult(g){
-  return DATA.matches.some(m => m.giornata===g && State.risultati[globalIndex(m)] !== undefined);
+  return State.matches.some(m => m.giornata===g && State.risultati[globalIndex(m)] !== undefined);
 }
 function isGiornataLocked(g){
   return giornataHasKickedOff(g) || giornataHasAnyResult(g);
 }
 function matchesForGiornata(g){
-  return DATA.matches.filter(m=>m.giornata===g);
+  return State.matches.filter(m=>m.giornata===g);
 }
 function teamsInGiornata(g){
   const list = [];
@@ -434,7 +465,7 @@ function renderTopbar(){
       <div class="brand-badge">US</div>
       <div>
         <h1 class="disp">Ultimo Sopravvissuto</h1>
-        <div class="sub">Serie A 2026/2027</div>
+        <div class="sub">By Sanka</div>
       </div>
     </div>
     <div class="top-actions">${right}</div>
@@ -449,7 +480,7 @@ function renderLanding(){
   return `
   <div class="hero">
     <div class="disp">Una squadra a testa.<br>Nessuna <em>seconda</em> chance... quasi.</div>
-    <p>${DATA.players.length} giocatori, ${ALL_GIORNATE.length} giornate, 2 vite a disposizione (una da usare su una sconfitta, una su un pareggio). Scegli una squadra ogni giornata: non puoi riusarla. Sopravvivi più a lungo di tutti.</p>
+    <p>${State.giocatori.length} giocatori, ${ALL_GIORNATE.length} giornate, 2 vite a disposizione (una da usare su una sconfitta, una su un pareggio). Scegli una squadra ogni giornata: non puoi riusarla. Sopravvivi più a lungo di tutti.</p>
   </div>
   <div class="role-grid">
     <div class="role-card" id="card-player">
@@ -689,17 +720,63 @@ function renderAdminLogin(){
   </div>`;
 }
 
+function upcomingGiornateSenzaChiusura(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const limite = new Date(today); limite.setDate(limite.getDate()+14);
+  return ALL_GIORNATE.filter(g=>{
+    if(State.chiusure[g]) return false;
+    const d = giornataDate(g);
+    if(!d) return false;
+    return d >= today && d <= limite;
+  });
+}
+
 function renderAdminDash(){
-  const tabs = ['risultati','forza','giocatori','classifica','impostazioni'];
-  const labels = {risultati:'Risultati', forza:'Forza pronostico', giocatori:'Giocatori', classifica:'Classifica', impostazioni:'Impostazioni'};
+  const tabs = ['risultati','forza','giocatori','calendario','classifica','impostazioni'];
+  const labels = {risultati:'Risultati', forza:'Forza pronostico', giocatori:'Giocatori', calendario:'Calendario', classifica:'Classifica', impostazioni:'Impostazioni'};
   let tabsHtml = tabs.map(t=>`<div class="tab ${State.adminTab===t?'active':''}" data-tab="${t}">${labels[t]}</div>`).join('');
+
+  const imminenti = upcomingGiornateSenzaChiusura();
+  let reminder = '';
+  if(imminenti.length){
+    reminder = `<div class="warn">⏰ Giornate imminenti senza orario di chiusura personalizzato: <b>${imminenti.map(g=>'G'+g).join(', ')}</b>. Ricordati di impostarlo nella scheda Risultati se conosci già l'orario ufficiale.</div>`;
+  }
+
   let content = '';
   if(State.adminTab==='risultati') content = renderAdminRisultati();
   else if(State.adminTab==='forza') content = renderAdminForza();
   else if(State.adminTab==='giocatori') content = renderAdminGiocatori();
+  else if(State.adminTab==='calendario') content = renderAdminCalendario();
   else if(State.adminTab==='classifica') content = renderClassificaTable();
   else if(State.adminTab==='impostazioni') content = renderAdminSettings();
-  return `<div class="tabs">${tabsHtml}</div>${content}`;
+  return `<div class="tabs">${tabsHtml}</div>${reminder}${content}`;
+}
+
+function renderAdminCalendario(){
+  const squadre = new Set();
+  State.matches.forEach(m=>{ squadre.add(m.casa); squadre.add(m.trasferta); });
+  return `
+  <div class="card">
+    <div class="card-title">Calendario attuale</div>
+    <p class="muted small">${squadre.size} squadre · ${ALL_GIORNATE.length} giornate · ${State.matches.length} partite in totale.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">Importa nuovo calendario (nuova stagione)</div>
+    <p class="muted small">Incolla qui il calendario della nuova stagione: una partita per riga, con giornata, data (gg/mm/aaaa), squadra di casa e squadra in trasferta, separati da virgola o da tabulazione (puoi copiare direttamente 4 colonne da Excel e incollarle qui).</p>
+    <div class="field">
+      <label>Calendario da importare</label>
+      <textarea id="calendario-textarea" rows="8" style="width:100%;background:#0c2a20;border:1px solid var(--line);border-radius:8px;color:var(--cream);padding:10px 12px;font-size:13px;font-family:'Space Mono',monospace;" placeholder="1,23/08/2027,Atalanta,Sassuolo
+1,23/08/2027,Bologna,Lazio
+2,30/08/2027,Sassuolo,Atalanta
+..."></textarea>
+    </div>
+    <div class="field" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="calendario-reset-check" checked style="width:auto;">
+      <label style="margin:0;text-transform:none;letter-spacing:0;font-weight:500;color:var(--cream);">Cancella anche pronostici, risultati e orari di chiusura della stagione precedente (consigliato per un anno nuovo)</label>
+    </div>
+    <button class="btn-primary btn" id="btn-importa-calendario">Importa nuovo calendario</button>
+    ${State._calFeedback?`<div class="ok">${esc(State._calFeedback)}</div>`:''}
+  </div>`;
 }
 
 function renderAdminForza(){
@@ -762,13 +839,30 @@ function renderAdminRisultati(){
   const g = State.adminGiornata;
   const matches = matchesForGiornata(g);
   const opts = ALL_GIORNATE.map(gg=>`<option value="${gg}" ${gg===g?'selected':''}>Giornata ${gg} — ${fmtDate(matchesForGiornata(gg)[0].data)}</option>`).join('');
+  const customLock = State.chiusure[g] || '';
+  const defaultInfo = 'Senza un orario personalizzato, il blocco scatta in automatico dal giorno della giornata (' + fmtDate(matches[0].data) + ').';
   return `
   <div class="card">
     <div class="row-between">
       <div class="card-title" style="margin:0;">Inserisci risultati</div>
       <select id="admin-g-select" style="max-width:260px;">${opts}</select>
     </div>
-    <table style="margin-top:10px;">
+
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line);">
+      <div class="card-title" style="font-size:18px;">Blocco pronostici — giornata ${g}</div>
+      <p class="muted small">${customLock ? 'Chiusura personalizzata impostata per questa giornata.' : esc(defaultInfo)}</p>
+      <div class="field">
+        <label>Data e ora esatta di chiusura</label>
+        <input type="datetime-local" id="chiusura-input" value="${customLock}">
+      </div>
+      <div class="row-between">
+        <button class="btn-ghost btn btn-sm" id="btn-rimuovi-chiusura" ${!customLock?'disabled':''}>Rimuovi orario personalizzato</button>
+        <button class="btn-primary btn" id="btn-salva-chiusura">Salva orario di chiusura</button>
+      </div>
+      ${State._chiusuraFeedback?`<div class="ok">${esc(State._chiusuraFeedback)}</div>`:''}
+    </div>
+
+    <table style="margin-top:16px;">
       <thead><tr><th>Casa</th><th></th><th>Trasferta</th><th></th></tr></thead>
       <tbody>
       ${matches.map(m=>{
@@ -906,6 +1000,8 @@ function attachHandlers(){
 
   on('admin-g-select', 'change', (e)=>{ State.adminGiornata = parseInt(e.target.value); render(); });
   on('btn-save-risultati', 'click', async ()=>{ await saveRisultati(); });
+  on('btn-salva-chiusura', 'click', async ()=>{ await salvaChiusura(); });
+  on('btn-rimuovi-chiusura', 'click', async ()=>{ await rimuoviChiusura(); });
 
   on('forza-player-select', 'change', async (e)=>{
     const id = parseInt(e.target.value) || null;
@@ -934,6 +1030,7 @@ function attachHandlers(){
   });
 
   on('btn-change-pw', 'click', async ()=>{ await changeAdminPw(); });
+  on('btn-importa-calendario', 'click', async ()=>{ await importaCalendario(); });
   on('btn-nuovo-torneo', 'click', async ()=>{ await avviaNuovoTorneo(); });
   on('btn-export', 'click', async ()=>{ await exportBackup(); });
 }
@@ -1017,6 +1114,31 @@ async function saveRisultati(){
   render();
 }
 
+async function salvaChiusura(){
+  const g = State.adminGiornata;
+  const val = document.getElementById('chiusura-input').value;
+  if(!val) return;
+  try{
+    await setConfig('lock_g' + g, val);
+    State.chiusure[g] = val;
+    State._chiusuraFeedback = 'Orario di chiusura salvato per la giornata ' + g + '.';
+  }catch(e){
+    alert('Errore: ' + (e.message||e));
+  }
+  render();
+}
+async function rimuoviChiusura(){
+  const g = State.adminGiornata;
+  try{
+    await deleteConfig('lock_g' + g);
+    delete State.chiusure[g];
+    State._chiusuraFeedback = 'Orario personalizzato rimosso: torna il blocco automatico predefinito.';
+  }catch(e){
+    alert('Errore: ' + (e.message||e));
+  }
+  render();
+}
+
 async function saveForzaPick(){
   if(!State._forzaPlayerId || !State._forzaPending) return;
   const playerId = State._forzaPlayerId;
@@ -1073,6 +1195,52 @@ async function changeAdminPw(){
     State._pwFeedback = 'Password aggiornata.';
   }catch(e){
     alert('Errore: ' + (e.message||e));
+  }
+  render();
+}
+async function importaCalendario(){
+  const raw = document.getElementById('calendario-textarea').value;
+  const resetAll = document.getElementById('calendario-reset-check').checked;
+  const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const parsed = [];
+  const dateRe = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+  for(const line of lines){
+    const parts = line.split(/\t|,/).map(p=>p.trim().replace(/^"|"$/g,''));
+    if(parts.length<4) continue;
+    const giornata = parseInt(parts[0]);
+    const data = parts[1];
+    const casa = parts[2];
+    const trasferta = parts[3];
+    if(isNaN(giornata) || !dateRe.test(data) || !casa || !trasferta) continue;
+    parsed.push({giornata, data, casa, trasferta});
+  }
+  if(parsed.length===0){
+    alert('Non ho trovato righe valide. Controlla il formato: giornata,gg/mm/aaaa,squadra casa,squadra trasferta');
+    return;
+  }
+  const giornateN = new Set(parsed.map(p=>p.giornata)).size;
+  const msg = 'Trovate ' + parsed.length + ' partite su ' + giornateN + ' giornate. Questo sostituirà completamente il calendario attuale.' +
+    (resetAll ? ' Verranno anche cancellati tutti i pronostici, i risultati e gli orari di chiusura della stagione precedente.' : '') +
+    ' Procedere?';
+  if(!confirm(msg)) return;
+  try{
+    await clearCalendario();
+    await bulkInsertCalendario(parsed);
+    if(resetAll){
+      await clearRisultati();
+      await clearPronosticiAll();
+      await clearChiusureAll();
+      await setConfig('torneo_start', '1');
+      State.torneoStart = 1;
+      State.risultati = {};
+      State.chiusure = {};
+    }
+    State.matches = await fetchCalendario();
+    ALL_GIORNATE = Array.from(new Set(State.matches.map(m=>m.giornata))).sort((a,b)=>a-b);
+    State.adminGiornata = ALL_GIORNATE[0] || 1;
+    State._calFeedback = 'Nuovo calendario importato: ' + parsed.length + ' partite su ' + giornateN + ' giornate.';
+  }catch(e){
+    alert('Errore durante importazione: ' + (e.message||e));
   }
   render();
 }
