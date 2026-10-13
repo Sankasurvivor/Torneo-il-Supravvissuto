@@ -438,6 +438,7 @@ function render(){
   else if(State.screen==='player-login') html += renderPlayerLogin();
   else if(State.screen==='player-dash') html += renderPlayerDash();
   else if(State.screen==='classifica') html += renderClassificaLoading();
+  else if(State.screen==='pronostici') html += State._allPron ? renderPronosticiGiornata() : renderClassificaLoading();
   else if(State.screen==='admin-login') html += renderAdminLogin();
   else if(State.screen==='admin-dash') html += renderAdminDash();
   html += renderFootnote();
@@ -452,6 +453,9 @@ function renderTopbar(){
   }
   if(State.screen!=='classifica'){
     right += `<button class="btn-ghost btn" id="btn-classifica">Classifica</button>`;
+  }
+  if(State.screen!=='pronostici'){
+    right += `<button class="btn-ghost btn" id="btn-pronostici">Pronostici</button>`;
   }
   if(State.currentPlayer){
     right += `<button class="btn-ghost btn" id="btn-logout">Esci (${esc(State.currentPlayer.nome)})</button>`;
@@ -495,6 +499,7 @@ function renderLanding(){
     </div>
   </div>
   <button class="classifica-link" id="btn-classifica-link">Vedi la classifica del torneo →</button>
+  <button class="classifica-link" id="btn-pronostici-link" style="margin-top:6px;">Vedi i pronostici della giornata →</button>
   `;
 }
 
@@ -947,6 +952,10 @@ function attachHandlers(){
   on('btn-home', 'click', ()=>{ State.screen='landing'; State.currentPlayer=null; State.isAdmin=false; State._selectedForLogin=null; render(); });
   on('btn-classifica', 'click', async ()=>{ await openClassifica(); });
   on('btn-classifica-link', 'click', async ()=>{ await openClassifica(); });
+  on('btn-pronostici', 'click', async ()=>{ await openPronostici(); });
+  on('btn-pronostici-link', 'click', async ()=>{ await openPronostici(); });
+  on('btn-pron-refresh', 'click', async ()=>{ await openPronostici(State._pronGiornata); });
+  on('pron-g-select', 'change', (e)=>{ State._pronGiornata = parseInt(e.target.value); render(); });
   on('btn-logout', 'click', ()=>{ State.currentPlayer=null; State._pron=null; State.screen='landing'; render(); });
   on('btn-logout-admin', 'click', ()=>{ State.isAdmin=false; State.screen='landing'; render(); });
 
@@ -1074,6 +1083,99 @@ async function savePick(){
   }
   State._pendingPick = null;
   render();
+}
+
+function giornataInCorso(){
+  const range = currentGiornateRange();
+  const locked = range.filter(g=>isGiornataLocked(g));
+  return locked.length ? locked[locked.length-1] : range[0];
+}
+
+async function openPronostici(g){
+  State.screen='pronostici';
+  State._allPron = null;
+  State._pronGiornata = g || State._pronGiornata || null;
+  render();
+  await refreshShared();
+  const all = {};
+  try{
+    const rows = await fetchAllPronostici();
+    (rows||[]).forEach(r=>{
+      if(!all[r.player_id]) all[r.player_id]={};
+      all[r.player_id][r.giornata] = r.squadra;
+    });
+  }catch(e){}
+  State._allPron = all;
+  if(!State._pronGiornata) State._pronGiornata = giornataInCorso();
+  render();
+}
+
+function renderPronosticiGiornata(){
+  const range = currentGiornateRange();
+  const g = State._pronGiornata || giornataInCorso();
+  const locked = isGiornataLocked(g);
+  const opts = range.map(gg=>`<option value="${gg}" ${gg===g?'selected':''}>Giornata ${gg} — ${fmtDate(matchesForGiornata(gg)[0].data)}${isGiornataLocked(gg)?'':' (non ancora chiusa)'}</option>`).join('');
+
+  let body = '';
+  if(!locked){
+    const lockInfo = State.chiusure[g] ? ' La chiusura è prevista per il ' + State.chiusure[g].replace('T',' alle ') + '.' : '';
+    body = `<div class="notice">I pronostici di questa giornata diventeranno visibili a tutti dopo la chiusura.${esc(lockInfo)}</div>`;
+  } else {
+    const matches = matchesForGiornata(g);
+    const rows = State.giocatori.map(p=>{
+      const pron = State._allPron[p.id] || {};
+      const st = computePlayerState(pron);
+      const pick = pron[g];
+      let match = null, esito = null;
+      if(pick){
+        match = matches.find(m=>m.casa===pick||m.trasferta===pick);
+        if(match) esito = computeEsito(match, pick);
+      }
+      const eliminatoPrima = st.eliminated && st.eliminatedGiornata < g;
+      return {p, pick, match, esito, eliminatoPrima};
+    });
+    rows.sort((a,b)=>a.p.nome.localeCompare(b.p.nome));
+
+    const counts = {};
+    rows.forEach(r=>{ if(r.pick) counts[r.pick] = (counts[r.pick]||0)+1; });
+    const chips = Object.entries(counts).sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]))
+      .map(([t,n])=>`<span class="status-pill ingioco" style="margin:0 6px 6px 0;">${esc(t)} × ${n}</span>`).join('');
+    const totPick = rows.filter(r=>r.pick).length;
+
+    body = `
+    <p class="muted small">${totPick} pronostici su ${rows.length} giocatori.</p>
+    ${chips ? `<div style="margin-bottom:12px;">${chips}</div>` : ''}
+    <table>
+      <thead><tr><th>Giocatore</th><th>Squadra</th><th>Esito</th></tr></thead>
+      <tbody>
+      ${rows.map(r=>{
+        let squadra;
+        if(r.pick){
+          const opp = r.match ? (r.match.casa===r.pick ? 'vs '+r.match.trasferta : '@ '+r.match.casa) : '';
+          squadra = `${esc(r.pick)}<div class="muted small">${esc(opp)}</div>`;
+        } else if(r.eliminatoPrima){
+          squadra = `<span class="muted">Eliminato</span>`;
+        } else {
+          squadra = `<span class="muted">Nessun pronostico</span>`;
+        }
+        const es = r.esito ? `<span class="esito-tag esito-${r.esito.toLowerCase()}">${r.esito}</span>` : (r.pick ? `<span class="esito-tag esito-attesa">in attesa</span>` : '');
+        return `<tr><td>${esc(r.p.nome)}</td><td>${squadra}</td><td>${es}</td></tr>`;
+      }).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  return `
+  <div class="card">
+    <div class="row-between">
+      <div class="card-title" style="margin:0;">Pronostici della giornata</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select id="pron-g-select" style="max-width:260px;">${opts}</select>
+        <button class="btn-ghost btn btn-sm" id="btn-pron-refresh">Aggiorna</button>
+      </div>
+    </div>
+    <div style="margin-top:14px;">${body}</div>
+  </div>`;
 }
 
 async function openClassifica(){
